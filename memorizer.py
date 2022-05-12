@@ -94,6 +94,7 @@ class MemRec(object):
         plt.bar(layernames, avg_mems, width = 0.4)
         
         plt.xlabel("layernames")
+        plt.xticks(rotation=45, ha="right")
         plt.ylabel("avg_mem_self_cpu")
         plt.savefig("layer-avg_mem_self_cpu.png")
 
@@ -111,6 +112,7 @@ class MemRec(object):
         plt.bar(layernames, avg_mems, width = 0.4)
         
         plt.xlabel("layernames")
+        plt.xticks(rotation=45, ha="right")
         plt.ylabel("avg_mem_cpu")
         plt.savefig("layer-avg_mem_cpu.png")
 
@@ -129,6 +131,7 @@ class MemRec(object):
             plt.bar(layernames, avg_mems, width = 0.4)
             
             plt.xlabel("layernames")
+            plt.xticks(rotation=45, ha="right")
             plt.ylabel("avg_mem_self_cuda")
             plt.savefig("layer-avg_mem_self_cuda.png")
 
@@ -146,6 +149,7 @@ class MemRec(object):
             plt.bar(layernames, avg_mems, width = 0.4)
             
             plt.xlabel("layernames")
+            plt.xticks(rotation=45, ha="right")
             plt.ylabel("avg_mem_cuda")
             plt.savefig("layer-avg_mem_cuda.png")
 

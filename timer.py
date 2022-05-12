@@ -33,8 +33,9 @@ class Clock(object):
 
         fig = plt.figure()
         # creating the bar plot
-        plt.bar(layernames, avg_times, width = 0.4)
+        plt.bar(layernames, avg_times, width=0.4)
         
         plt.xlabel("layernames")
+        plt.xticks(rotation=45, ha="right")
         plt.ylabel("avg_times")
         plt.savefig("layer-avg_time.png")
