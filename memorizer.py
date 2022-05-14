@@ -10,6 +10,8 @@ class MemRec(object):
         self.mem_cuda = {}
 
     def get_mem_helper(self, ret_list, col_name):
+        if col_name not in ret_list[0]:
+            return 0.0
         index = ret_list[0].index(col_name)
         mem_all_layers_list = [lis[index] for lis in ret_list]
         mem_all_layers_list.pop(0)
@@ -43,21 +45,21 @@ class MemRec(object):
 
         ret_list = parse_prof_table(prof_report)
 
-        self.mem_self_cpu[layername].append(self.get_mem_helper(ret_list, "Self CPU Mem"))
+        # self.mem_self_cpu[layername].append(self.get_mem_helper(ret_list, "Self CPU Mem"))
         self.mem_cpu[layername].append(self.get_mem_helper(ret_list, "CPU Mem"))
         if usingcuda:
-            self.mem_self_cuda[layername].append(self.get_mem_helper(ret_list, "Self CUDA Mem"))
+            # self.mem_self_cuda[layername].append(self.get_mem_helper(ret_list, "Self CUDA Mem"))
             self.mem_cuda[layername].append(self.get_mem_helper(ret_list, "CUDA Mem"))
 
     def report(self, sample=False):
         if sample:
-            print("--------------------------------")
-            print("Self CPU Mem")
-            for key, value in self.mem_self_cpu.items():
-                print(key, end=' :: ')
-                print(value, flush=True)
-            print("--------------------------------")
-            print()
+            # print("--------------------------------")
+            # print("Self CPU Mem")
+            # for key, value in self.mem_self_cpu.items():
+            #     print(key, end=' :: ')
+            #     print(value, flush=True)
+            # print("--------------------------------")
+            # print()
             print("--------------------------------")
             print("CPU Mem")
             for key, value in self.mem_cpu.items():
@@ -66,13 +68,13 @@ class MemRec(object):
             print("--------------------------------")
             if self.mem_cuda:
                 print()
-                print("--------------------------------")
-                print("Self CUDA Mem")
-                for key, value in self.mem_self_cuda.items():
-                    print(key, end=' :: ')
-                    print(value, flush=True)
-                print("--------------------------------")
-                print()
+                # print("--------------------------------")
+                # print("Self CUDA Mem")
+                # for key, value in self.mem_self_cuda.items():
+                #     print(key, end=' :: ')
+                #     print(value, flush=True)
+                # print("--------------------------------")
+                # print()
                 print("--------------------------------")
                 print("CUDA Mem")
                 for key, value in self.mem_cuda.items():
@@ -80,23 +82,23 @@ class MemRec(object):
                     print(value, flush=True)
                 print("--------------------------------")
         
-        layernames = []
-        avg_mems = []
-        print("mem_self_cpu | Average Mem Consumption of Each Layer")
-        for key, value in self.mem_self_cpu.items():
-            value.pop(0)
-            print(f"{key} :: {sum(value)/len(value)}")
-            layernames.append(key)
-            avg_mems.append(sum(value)/len(value))
+        # layernames = []
+        # avg_mems = []
+        # print("mem_self_cpu | Average Mem Consumption of Each Layer")
+        # for key, value in self.mem_self_cpu.items():
+        #     value.pop(0)
+        #     print(f"{key} :: {sum(value)/len(value)}")
+        #     layernames.append(key)
+        #     avg_mems.append(sum(value)/len(value))
 
-        fig = plt.figure()
-        # creating the bar plot
-        plt.bar(layernames, avg_mems, width = 0.4)
+        # fig = plt.figure()
+        # # creating the bar plot
+        # plt.bar(layernames, avg_mems, width = 0.4)
         
-        plt.xlabel("layernames")
-        plt.xticks(rotation=45, ha="right")
-        plt.ylabel("avg_mem_self_cpu")
-        plt.savefig("layer-avg_mem_self_cpu.png")
+        # plt.xlabel("layernames")
+        # plt.xticks(rotation=45, ha="right")
+        # plt.ylabel("avg_mem_self_cpu")
+        # plt.savefig("layer-avg_mem_self_cpu.png")
 
         layernames = []
         avg_mems = []
@@ -117,23 +119,23 @@ class MemRec(object):
         plt.savefig("layer-avg_mem_cpu.png")
 
         if self.mem_cuda:
-            layernames = []
-            avg_mems = []
-            print("mem_self_cuda | Average Mem Consumption of Each Layer")
-            for key, value in self.mem_self_cuda.items():
-                value.pop(0)
-                print(f"{key} :: {sum(value)/len(value)}")
-                layernames.append(key)
-                avg_mems.append(sum(value)/len(value))
+            # layernames = []
+            # avg_mems = []
+            # print("mem_self_cuda | Average Mem Consumption of Each Layer")
+            # for key, value in self.mem_self_cuda.items():
+            #     value.pop(0)
+            #     print(f"{key} :: {sum(value)/len(value)}")
+            #     layernames.append(key)
+            #     avg_mems.append(sum(value)/len(value))
 
-            fig = plt.figure()
-            # creating the bar plot
-            plt.bar(layernames, avg_mems, width = 0.4)
+            # fig = plt.figure()
+            # # creating the bar plot
+            # plt.bar(layernames, avg_mems, width = 0.4)
             
-            plt.xlabel("layernames")
-            plt.xticks(rotation=45, ha="right")
-            plt.ylabel("avg_mem_self_cuda")
-            plt.savefig("layer-avg_mem_self_cuda.png")
+            # plt.xlabel("layernames")
+            # plt.xticks(rotation=45, ha="right")
+            # plt.ylabel("avg_mem_self_cuda")
+            # plt.savefig("layer-avg_mem_self_cuda.png")
 
             layernames = []
             avg_mems = []

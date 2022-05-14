@@ -13,8 +13,8 @@ usingcuda = device == "cuda:0"
 tt = Clock()
 mr = MemRec()
 
-resnet = torchvision.models.resnet50(pretrained=True)
-x = torch.rand(1, 3, 224, 224)
+resnet = torchvision.models.resnet50(pretrained=True).to(device)
+x = torch.rand(1, 3, 224, 224).to(device)
 
 # for name, layer in resnet.named_children():
 #     print(name, '\n', layer)
