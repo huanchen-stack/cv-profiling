@@ -1,7 +1,7 @@
 import time
 import matplotlib.pyplot as plt
 
-plt.rcParams['font.size'] = 8
+plt.rcParams['font.size'] = 6
 
 class Clock(object):
     def __init__(self):
@@ -38,6 +38,6 @@ class Clock(object):
         plt.bar(layernames, avg_times, width=0.4)
         
         plt.xlabel("layernames")
-        plt.xticks(rotation=45, ha="right")
+        plt.xticks(rotation=30, ha="right")
         plt.ylabel("avg_times")
         plt.savefig("layer-avg_time.png")
