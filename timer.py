@@ -1,6 +1,8 @@
 import time
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.size'] = 8
+
 class Clock(object):
     def __init__(self):
         super().__init__()
