@@ -1,23 +1,23 @@
-_conv1_in torch.Size([1, 3, 800, 800]) 7680000
-_conv1_out torch.Size([1, 64, 400, 400]) 40960000
-_bn1_in torch.Size([1, 64, 400, 400]) 40960000
-_bn1_out torch.Size([1, 64, 400, 400]) 40960000
-_relu_in torch.Size([1, 64, 400, 400]) 40960000
-_relu_out torch.Size([1, 64, 400, 400]) 40960000
-_maxpool_in torch.Size([1, 64, 400, 400]) 40960000
-_maxpool_out torch.Size([1, 64, 200, 200]) 10240000
-_layer1_in torch.Size([1, 64, 200, 200]) 10240000
-_layer1_out torch.Size([1, 256, 200, 200]) 40960000
-_layer2_in torch.Size([1, 256, 200, 200]) 40960000
-_layer2_out torch.Size([1, 512, 100, 100]) 20480000
-_layer3_in torch.Size([1, 512, 100, 100]) 20480000
-_layer3_out torch.Size([1, 1024, 50, 50]) 10240000
-_layer4_in torch.Size([1, 1024, 50, 50]) 10240000
-_layer4_out torch.Size([1, 2048, 25, 25]) 5120000
-_avgpool_in torch.Size([1, 2048, 25, 25]) 5120000
-_avgpool_out torch.Size([1, 2048, 1, 1]) 8192
-_fc_in torch.Size([1, 2048]) 8192
-_fc_out torch.Size([1, 1000]) 4000
+_conv1_in torch.Size([1, 3, 800, 800]) 7.68 Mb
+_conv1_out torch.Size([1, 64, 400, 400]) 40.96 Mb
+_bn1_in torch.Size([1, 64, 400, 400]) 40.96 Mb
+_bn1_out torch.Size([1, 64, 400, 400]) 40.96 Mb
+_relu_in torch.Size([1, 64, 400, 400]) 40.96 Mb
+_relu_out torch.Size([1, 64, 400, 400]) 40.96 Mb
+_maxpool_in torch.Size([1, 64, 400, 400]) 40.96 Mb
+_maxpool_out torch.Size([1, 64, 200, 200]) 10.24 Mb
+_layer1_in torch.Size([1, 64, 200, 200]) 10.24 Mb
+_layer1_out torch.Size([1, 256, 200, 200]) 40.96 Mb
+_layer2_in torch.Size([1, 256, 200, 200]) 40.96 Mb
+_layer2_out torch.Size([1, 512, 100, 100]) 20.48 Mb
+_layer3_in torch.Size([1, 512, 100, 100]) 20.48 Mb
+_layer3_out torch.Size([1, 1024, 50, 50]) 10.24 Mb
+_layer4_in torch.Size([1, 1024, 50, 50]) 10.24 Mb
+_layer4_out torch.Size([1, 2048, 25, 25]) 5.12 Mb
+_avgpool_in torch.Size([1, 2048, 25, 25]) 5.12 Mb
+_avgpool_out torch.Size([1, 2048, 1, 1]) 0.008192 Mb
+_fc_in torch.Size([1, 2048]) 0.008192 Mb
+_fc_out torch.Size([1, 1000]) 0.004 Mb
 
 
 Average Time of Each Layer

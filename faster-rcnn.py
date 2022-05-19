@@ -31,6 +31,8 @@ def _default_anchorgen():
     aspect_ratios = ((0.5, 1.0, 2.0),) * len(anchor_sizes)
     return AnchorGenerator(anchor_sizes, aspect_ratios)
 
+def _tensor_size(tensor):
+    return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
 
 class Profiler():
     def __init__(self):
@@ -69,10 +71,10 @@ class Profiler():
 
     def _size_helper(self, name, obj):
         if type(obj) == torch.Tensor:
-            print(name, "::" , obj.shape, obj.element_size() * obj.nelement() )
+            print(name, "::" , obj.shape, _tensor_size(obj) )
         
         elif type(obj) == torchvision.models.detection.image_list.ImageList:
-            print(name, "::", obj.tensors.shape, obj.tensors.element_size() * obj.tensors.nelement())
+            print(name, "::", obj.tensors.shape, _tensor_size(obj.tensors))
         
         elif type(obj) == OrderedDict:
             all = 0
@@ -80,7 +82,7 @@ class Profiler():
                 tmp = list(obj.values())[i]
                 size = tmp.element_size() * tmp.nelement()
                 print(name, end=f'[{i}] :: ')
-                print(tmp.shape, size)
+                print(tmp.shape, _tensor_size(tmp))
                 all += size
             print(name, '::', all)
         elif type(obj) == list:
@@ -89,7 +91,7 @@ class Profiler():
                 tmp = obj[i]
                 size = tmp.element_size() * tmp.nelement()
                 print(name, end=f'[{i}] :: ')
-                print(tmp.shape, size)
+                print(tmp.shape, _tensor_size(tmp))
                 all += size
             print(name, '::', all)
 

@@ -13,6 +13,9 @@ usingcuda = device == "cuda:0"
 tt = Clock()
 mr = MemRec()
 
+def _tensor_size(tensor):
+    return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
+
 class ProfResnet(object):
     def __init__(self):
         super().__init__()
@@ -65,14 +68,14 @@ class ProfResnet(object):
             prof_report = str(prof.key_averages().table()).split("\n")
             mr.get_mem(name, prof_report, usingcuda)
 
-            print(name, "_in ",  x.shape, ' ', x.element_size() * x.nelement(), sep='')
+            print(name, "_in ",  x.shape, ' ', _tensor_size(x), sep='')
 
             # find runtime
             tt.tic(name)
             x = layer(x)
             tt.toc(name)
 
-            print(name, "_out ", x.shape, ' ', x.element_size() * x.nelement(), sep='')
+            print(name, "_out ", x.shape, ' ', _tensor_size(x), sep='')
 
 
 if __name__ == "__main__":
@@ -86,7 +89,7 @@ if __name__ == "__main__":
 
     for i in range(2):
         profResnet = ProfResnet()
-        profResnet.itrResLayer(resnet, "", x, recursive=False)
+        profResnet.itrResLayer(resnet, "", x, recursive=True)
         # break
 
     tt.report(sample=False)
