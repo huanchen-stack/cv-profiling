@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
     for i in range(2):
         profResnet = ProfResnet()
-        profResnet.itrResLayer(resnet, "", x, recursive=True)
+        profResnet.itrResLayer(resnet, "", x, recursive=False)
         # break
 
     tt.report(sample=False)
