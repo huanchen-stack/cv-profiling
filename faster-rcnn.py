@@ -67,6 +67,33 @@ class Profiler():
             prof_report = str(prof.key_averages().table()).split("\n")
             mr.get_mem(name, prof_report, usingcuda)
 
+    def _size_helper(self, name, obj):
+        if type(obj) == torch.Tensor:
+            print(name, "::" , obj.shape, obj.element_size() * obj.nelement() )
+        
+        elif type(obj) == torchvision.models.detection.image_list.ImageList:
+            print(name, "::", obj.tensors.shape, obj.tensors.element_size() * obj.tensors.nelement())
+        
+        elif type(obj) == OrderedDict:
+            all = 0
+            for i in range(len(list(obj.values()))):
+                tmp = list(obj.values())[i]
+                size = tmp.element_size() * tmp.nelement()
+                print(name, end=f'[{i}] :: ')
+                print(tmp.shape, size)
+                all += size
+            print(name, '::', all)
+        elif type(obj) == list:
+            all = 0
+            for i in range(len(obj)):
+                tmp = obj[i]
+                size = tmp.element_size() * tmp.nelement()
+                print(name, end=f'[{i}] :: ')
+                print(tmp.shape, size)
+                all += size
+            print(name, '::', all)
+
+
     def get_original_images_sizes(self):
         # get original_image_sizes for postprocessing
         original_image_sizes = []
@@ -80,7 +107,9 @@ class Profiler():
         self.args["original_image_sizes"] = original_image_sizes
 
     def transform(self):
+        self._size_helper("transform_in([input])", self.images)
         self.images, self.targets = self.model.transform(self.images, self.targets)
+        self._size_helper("transform_out([images])", self.images)
 
     def backbonefpn_details(self):
         # backbonefpn_body setup
@@ -135,7 +164,9 @@ class Profiler():
                     def _inner():
                         module(x)
                     self._profile_helper(_inner, "backbonefpn_fpn_inner_{}".format(i))
+                    self._size_helper(f"backbonefpn_fpn_inner_{i}_in", x)
                     out = module(x)
+                    self._size_helper(f"backbonefpn_fpn_inner_{i}_out", out)
             return out
 
         def get_result_from_layer_blocks(x, idx):
@@ -149,10 +180,13 @@ class Profiler():
                     def _layer():
                         module(x)
                     self._profile_helper(_layer, "backbonefpn_fpn_layer_{}".format(i))
+                    self._size_helper(f"backbonefpn_fpn_layer_{i}_in", x)
                     out = module(x)
+                    self._size_helper(f"backbonefpn_fpn_layer_{i}_out", out)
             return out
         
         # forward
+        self._size_helper("backbonefpn_body_out([x])", self.args["x"])
         x = self.args["x"]
         names = list(x.keys())
         x = list(x.values())
@@ -164,8 +198,15 @@ class Profiler():
         for idx in range(len(x) - 2, -1, -1):
             inner_lateral = get_result_from_inner_blocks(x[idx], idx)
             feat_shape = inner_lateral.shape[-2:]
+
+            def _interpolate():
+                inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
+            self._profile_helper(_interpolate, "backbonefpn_fpn_interpolate{}".format(idx))
+            self._size_helper(f"fpn_interpolate{idx}_in", last_inner)
             inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
+            self._size_helper(f"fpn_interpolate{idx}_out", last_inner)
             last_inner = inner_lateral + inner_top_down
+            
             results.insert(0, get_result_from_layer_blocks(last_inner, idx))
 
         # extra layer
@@ -177,7 +218,7 @@ class Profiler():
             results = x
 
         out = OrderedDict([(k, v) for k, v in zip(names, results)])
-
+        self._size_helper(f"backbone_fpn_out([features])", out)
 
     def rpn_head(self):
         # RPNHead setup
@@ -201,21 +242,39 @@ class Profiler():
         # forward
         logits = []
         bbox_reg = []
+
+        self._size_helper("rpn_head_in", self.args["features_"])
+        idx = 0
         for feature in self.args["features_"]:
             t = rpn_head.conv(feature)
             convs = []
             for name, layer in rpn_head.named_children():
                 convs.append(layer)
+
             # details
+            self._size_helper(f"rpn_head_conv_in(on feature[{idx}])", feature)
             x = convs[0](feature)
+            self._size_helper(f"rpn_head_conv_out(on feature[{idx}])", x)
+
+            self._size_helper(f"rpn_head_logits_in(on feature[{idx}])", x)
             y = convs[1](x)
+            self._size_helper(f"rpn_head_logits_out(on feature[{idx}])", y)
+
+            self._size_helper(f"rpn_head_bbox_in(on feature[{idx}])", x)
             z = convs[2](x)
+            self._size_helper(f"rpn_head_bbox_out(on feature[{idx}])", z)
+
+            idx += 1
+
             def _conv():
                 convs[0](feature)
+
             def _logits():
                 convs[1](x)
+
             def _regression():
                 convs[2](x)
+
             self._profile_helper(_conv, "rpn_head_details_conv_per_feature")
             self._profile_helper(_logits, "rpn_head_details_logits_per_feature")
             self._profile_helper(_regression, "rpn_head_details_regression_per_feature")
@@ -235,6 +294,8 @@ class Profiler():
         proposals = proposals.view(num_images, -1, 4)
         boxes, scores = model.rpn.filter_proposals(proposals, self.args["objectness"], self.images.image_sizes, num_anchors_per_level)
         self.args["proposals"], self.args["proposal_losses"] = boxes, scores
+
+        self._size_helper("rpn_anchor_out([proposals])", self.args["proposals"])
 
     def roi_heads(self):
         self.args["detections"], self.args["detector_losses"] = self.model.roi_heads(
@@ -259,25 +320,37 @@ class Profiler():
         image_shapes = self.images.image_sizes
 
         def _box_roi_pool():
-            box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
+            self.args["box_features"] = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
         self._profile_helper(_box_roi_pool, "roi_heads_box_roi_pool")
-        box_features = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
+        self._size_helper("roi_head_box_roi_pool", self.args["box_features"])
+        # box_features = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
 
         def _box_head():
-            box_head(box_features)
+            self.args["box_features_"] = box_head(self.args["box_features"])
         self._profile_helper(_box_head, "roi_heads_box_head")
-        box_features = box_head(box_features)
+        self._size_helper("roi_heads_box_head_in", self.args["box_features"])
+        self._size_helper("roi_heads_box_head_out", self.args["box_features_"])
+        # box_features = box_head(box_features)
 
         def _box_predictor():
-            box_predictor(box_features)
+            self.args["class_logits"], self.args["box_regression"] = box_predictor(self.args["box_features_"])
         self._profile_helper(_box_predictor, "roi_heads_box_predictor")
-        class_logits, box_regression = box_predictor(box_features)
+        self._size_helper("roi_heads_box_predictor_cls_scores_in", self.args["box_features_"])
+        self._size_helper("roi_heads_box_predictor_bbox_pred_in", self.args["box_features_"])
+        self._size_helper("roi_heads_box_predictor_cls_scores_out", self.args["class_logits"])
+        self._size_helper("roi_heads_box_predictor_bbox_pred_out", self.args["box_regression"])
+        # class_logits, box_regression = box_predictor(box_features)
 
         def _postprocess_detections():
-            self.model.roi_heads.postprocess_detections(class_logits, box_regression, self.args["proposals"], self.images.image_sizes)
+            self.model.roi_heads.postprocess_detections(
+                self.args["class_logits"], self.args["box_regression"], 
+                self.args["proposals"], self.images.image_sizes
+            )
         self._profile_helper(_postprocess_detections, "roi_heads_postprocess_detections")
-        boxes, scores, labels = self.model.roi_heads.postprocess_detections(class_logits, box_regression, self.args["proposals"], self.images.image_sizes)
-
+        boxes, scores, labels = self.model.roi_heads.postprocess_detections(
+                                    self.args["class_logits"], self.args["box_regression"], 
+                                    self.args["proposals"], self.images.image_sizes
+                                )
         # in per image inferences, num_images = 0, thus takes VERY small time/mem
         result = []
         losses = {}
@@ -293,6 +366,34 @@ class Profiler():
 
         self.args["detections"], self.args["detector_losses"] = result, losses
 
+    def roi_heads_box_head_details(self):
+        box_head = self.model.roi_heads.box_head
+        x = self.args["box_features"]
+        # flatten should take VERY small amount of time and memory
+        x = x.flatten(start_dim=1)
+
+        def _fc6():
+            F.relu(box_head.fc6(x))
+        self._profile_helper(_fc6, "roi_heads_box_head_fc6")
+        x = F.relu(box_head.fc6(x))
+
+        def _fc7():
+            F.relu(box_head.fc7(x))
+        self._profile_helper(_fc7, "roi_heads_box_head_fc7")
+
+    def roi_heads_box_predictor_details(self):
+        box_predictor = self.model.roi_heads.box_predictor
+        x = self.args["box_features_"]
+        # flatten should take VERY small amount of time and memory
+        x = x.flatten(start_dim=1)
+        
+        def _cls_score():
+            box_predictor.cls_score(x)
+        self._profile_helper(_cls_score, "roi_heads_box_predictor_cls_score(linear)")
+        
+        def _bbox_pred():
+            box_predictor.bbox_pred(x)
+        self._profile_helper(_bbox_pred, "roi_heads_box_predictor_bbox_pred(linear)")
 
     def faster_rcnn_simulation(self):
 
@@ -307,7 +408,10 @@ class Profiler():
         self._profile_helper(self.rpn_anchor_generator, "rpn_anchor_generator")
 
         self._profile_helper(self.roi_heads, "roi_heads")
-        self.roi_heads_details()  #uncomment to reveal details
+        self.roi_heads_details()  # uncomment to reveal details
+
+        self.roi_heads_box_head_details()  # uncomment to reveal details
+        self.roi_heads_box_predictor_details()  # uncomment to reveal details
         
 
 

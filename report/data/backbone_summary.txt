@@ -1,0 +1,64 @@
+_conv1 torch.Size([1, 3, 800, 800])
+_conv1 torch.Size([1, 64, 400, 400])
+_bn1 torch.Size([1, 64, 400, 400])
+_bn1 torch.Size([1, 64, 400, 400])
+_relu torch.Size([1, 64, 400, 400])
+_relu torch.Size([1, 64, 400, 400])
+_maxpool torch.Size([1, 64, 400, 400])
+_maxpool torch.Size([1, 64, 200, 200])
+_layer1 torch.Size([1, 64, 200, 200])
+_layer1 torch.Size([1, 256, 200, 200])
+_layer2 torch.Size([1, 256, 200, 200])
+_layer2 torch.Size([1, 512, 100, 100])
+_layer3 torch.Size([1, 512, 100, 100])
+_layer3 torch.Size([1, 1024, 50, 50])
+_layer4 torch.Size([1, 1024, 50, 50])
+_layer4 torch.Size([1, 2048, 25, 25])
+_avgpool torch.Size([1, 2048, 25, 25])
+_avgpool torch.Size([1, 2048, 1, 1])
+_fc torch.Size([1, 2048])
+_fc torch.Size([1, 1000])
+_conv1 torch.Size([1, 3, 800, 800])
+_conv1 torch.Size([1, 64, 400, 400])
+_bn1 torch.Size([1, 64, 400, 400])
+_bn1 torch.Size([1, 64, 400, 400])
+_relu torch.Size([1, 64, 400, 400])
+_relu torch.Size([1, 64, 400, 400])
+_maxpool torch.Size([1, 64, 400, 400])
+_maxpool torch.Size([1, 64, 200, 200])
+_layer1 torch.Size([1, 64, 200, 200])
+_layer1 torch.Size([1, 256, 200, 200])
+_layer2 torch.Size([1, 256, 200, 200])
+_layer2 torch.Size([1, 512, 100, 100])
+_layer3 torch.Size([1, 512, 100, 100])
+_layer3 torch.Size([1, 1024, 50, 50])
+_layer4 torch.Size([1, 1024, 50, 50])
+_layer4 torch.Size([1, 2048, 25, 25])
+_avgpool torch.Size([1, 2048, 25, 25])
+_avgpool torch.Size([1, 2048, 1, 1])
+_fc torch.Size([1, 2048])
+_fc torch.Size([1, 1000])
+
+Average Time of Each Layer
+_conv1 :: 0.038275718688964844
+_bn1 :: 0.009105205535888672
+_relu :: 0.0025491714477539062
+_maxpool :: 0.01791214942932129
+_layer1 :: 0.3419060707092285
+_layer2 :: 0.3912801742553711
+_layer3 :: 0.44289302825927734
+_layer4 :: 0.23169803619384766
+_avgpool :: 0.00021886825561523438
+_fc :: 0.0003910064697265625
+
+mem_cpu | Average Mem Consumption of Each Layer
+_conv1 :: 195.3
+_bn1 :: 156.240268
+_relu :: 0.00041999999999999996
+_maxpool :: 29.30042
+_layer1 :: 2148.4656119999995
+_layer2 :: 1513.834156
+_layer3 :: 1050.28022
+_layer4 :: 305.694096
+_avgpool :: 0.016432000000000002
+_fc :: 0.00824

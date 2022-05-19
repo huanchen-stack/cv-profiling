@@ -1,0 +1,572 @@
+_conv1_in torch.Size([1, 3, 800, 800]) 7680000
+_conv1_out torch.Size([1, 64, 400, 400]) 40960000
+_bn1_in torch.Size([1, 64, 400, 400]) 40960000
+_bn1_out torch.Size([1, 64, 400, 400]) 40960000
+_relu_in torch.Size([1, 64, 400, 400]) 40960000
+_relu_out torch.Size([1, 64, 400, 400]) 40960000
+_maxpool_in torch.Size([1, 64, 400, 400]) 40960000
+_maxpool_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv1_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_bn1_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_bn1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_bn2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_bn2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv3_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_conv3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_bn3_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_bn3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_relu_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_relu_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_downsample_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_downsample_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_0_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_0_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_conv1_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_conv1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_bn1_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_bn1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_conv2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_conv2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_bn2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_bn2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_conv3_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_1_conv3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_bn3_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_bn3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_relu_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_relu_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_1_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_conv1_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_conv1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_bn1_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_bn1_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_conv2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_conv2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_bn2_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_bn2_out torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_conv3_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_2_conv3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_bn3_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_bn3_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_relu_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_relu_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_in torch.Size([1, 256, 200, 200]) 40960000
+_layer1_2_out torch.Size([1, 256, 200, 200]) 40960000
+_layer1_in torch.Size([1, 64, 200, 200]) 10240000
+_layer1_out torch.Size([1, 256, 200, 200]) 40960000
+_layer2_0_conv1_in torch.Size([1, 256, 200, 200]) 40960000
+_layer2_0_conv1_out torch.Size([1, 128, 200, 200]) 20480000
+_layer2_0_bn1_in torch.Size([1, 128, 200, 200]) 20480000
+_layer2_0_bn1_out torch.Size([1, 128, 200, 200]) 20480000
+_layer2_0_conv2_in torch.Size([1, 128, 200, 200]) 20480000
+_layer2_0_conv2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_0_bn2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_0_bn2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_0_conv3_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_0_conv3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_bn3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_bn3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_relu_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_relu_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_downsample_in torch.Size([1, 256, 200, 200]) 40960000
+_layer2_0_downsample_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_0_in torch.Size([1, 256, 200, 200]) 40960000
+_layer2_0_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_conv1_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_conv1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_bn1_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_bn1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_conv2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_conv2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_bn2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_bn2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_conv3_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_1_conv3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_bn3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_bn3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_relu_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_relu_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_1_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_conv1_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_conv1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_bn1_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_bn1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_conv2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_conv2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_bn2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_bn2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_conv3_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_2_conv3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_bn3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_bn3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_relu_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_relu_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_2_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_conv1_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_conv1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_bn1_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_bn1_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_conv2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_conv2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_bn2_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_bn2_out torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_conv3_in torch.Size([1, 128, 100, 100]) 5120000
+_layer2_3_conv3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_bn3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_bn3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_relu_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_relu_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer2_3_out torch.Size([1, 512, 100, 100]) 20480000
+_layer2_in torch.Size([1, 256, 200, 200]) 40960000
+_layer2_out torch.Size([1, 512, 100, 100]) 20480000
+_layer3_0_conv1_in torch.Size([1, 512, 100, 100]) 20480000
+_layer3_0_conv1_out torch.Size([1, 256, 100, 100]) 10240000
+_layer3_0_bn1_in torch.Size([1, 256, 100, 100]) 10240000
+_layer3_0_bn1_out torch.Size([1, 256, 100, 100]) 10240000
+_layer3_0_conv2_in torch.Size([1, 256, 100, 100]) 10240000
+_layer3_0_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_0_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_0_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_0_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_0_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_downsample_in torch.Size([1, 512, 100, 100]) 20480000
+_layer3_0_downsample_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_0_in torch.Size([1, 512, 100, 100]) 20480000
+_layer3_0_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_conv1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_bn1_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_bn1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_conv2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_1_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_1_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_conv1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_bn1_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_bn1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_conv2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_2_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_2_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_conv1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_bn1_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_bn1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_conv2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_3_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_conv1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_bn1_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_bn1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_conv2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_4_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_4_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_conv1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_bn1_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_bn1_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_conv2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_conv2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_bn2_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_bn2_out torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_conv3_in torch.Size([1, 256, 50, 50]) 2560000
+_layer3_5_conv3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_bn3_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_bn3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_relu_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_relu_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_5_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer3_in torch.Size([1, 512, 100, 100]) 20480000
+_layer3_out torch.Size([1, 1024, 50, 50]) 10240000
+_layer4_0_conv1_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer4_0_conv1_out torch.Size([1, 512, 50, 50]) 5120000
+_layer4_0_bn1_in torch.Size([1, 512, 50, 50]) 5120000
+_layer4_0_bn1_out torch.Size([1, 512, 50, 50]) 5120000
+_layer4_0_conv2_in torch.Size([1, 512, 50, 50]) 5120000
+_layer4_0_conv2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_0_bn2_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_0_bn2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_0_conv3_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_0_conv3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_bn3_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_bn3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_relu_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_relu_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_downsample_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer4_0_downsample_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_0_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer4_0_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_conv1_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_conv1_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_bn1_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_bn1_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_conv2_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_conv2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_bn2_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_bn2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_conv3_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_1_conv3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_bn3_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_bn3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_relu_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_relu_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_1_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_conv1_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_conv1_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_bn1_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_bn1_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_conv2_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_conv2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_bn2_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_bn2_out torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_conv3_in torch.Size([1, 512, 25, 25]) 1280000
+_layer4_2_conv3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_bn3_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_bn3_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_relu_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_relu_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_in torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_2_out torch.Size([1, 2048, 25, 25]) 5120000
+_layer4_in torch.Size([1, 1024, 50, 50]) 10240000
+_layer4_out torch.Size([1, 2048, 25, 25]) 5120000
+_avgpool_in torch.Size([1, 2048, 25, 25]) 5120000
+_avgpool_out torch.Size([1, 2048, 1, 1]) 8192
+_fc_in torch.Size([1, 2048]) 8192
+_fc_out torch.Size([1, 1000]) 4000
+
+Average Time of Each Layer
+_conv1 :: 0.039999961853027344
+_bn1 :: 0.009843826293945312
+_relu :: 0.002669095993041992
+_maxpool :: 0.018770933151245117
+_layer1_0_conv1 :: 0.00573277473449707
+_layer1_0_bn1 :: 0.002701997756958008
+_layer1_0_conv2 :: 0.029090166091918945
+_layer1_0_bn2 :: 0.002226114273071289
+_layer1_0_conv3 :: 0.024387121200561523
+_layer1_0_bn3 :: 0.009366989135742188
+_layer1_0_relu :: 0.002521038055419922
+_layer1_0_downsample :: 0.034950971603393555
+_layer1_0 :: 0.12320733070373535
+_layer1_1_conv1 :: 0.024011850357055664
+_layer1_1_bn1 :: 0.002251148223876953
+_layer1_1_conv2 :: 0.028732776641845703
+_layer1_1_bn2 :: 0.0021810531616210938
+_layer1_1_conv3 :: 0.024261951446533203
+_layer1_1_bn3 :: 0.009439945220947266
+_layer1_1_relu :: 0.002488851547241211
+_layer1_1 :: 0.10648202896118164
+_layer1_2_conv1 :: 0.023800134658813477
+_layer1_2_bn1 :: 0.0021817684173583984
+_layer1_2_conv2 :: 0.02901601791381836
+_layer1_2_bn2 :: 0.0021359920501708984
+_layer1_2_conv3 :: 0.02421402931213379
+_layer1_2_bn3 :: 0.009530067443847656
+_layer1_2_relu :: 0.002657175064086914
+_layer1_2 :: 0.10226106643676758
+_layer1 :: 0.3468749523162842
+_layer2_0_conv1 :: 0.04177522659301758
+_layer2_0_bn1 :: 0.004696846008300781
+_layer2_0_conv2 :: 0.035662174224853516
+_layer2_0_bn2 :: 0.0011649131774902344
+_layer2_0_conv3 :: 0.020848751068115234
+_layer2_0_bn3 :: 0.004728078842163086
+_layer2_0_relu :: 0.0014252662658691406
+_layer2_0_downsample :: 0.04567289352416992
+_layer2_0 :: 0.15649008750915527
+_layer2_1_conv1 :: 0.019200801849365234
+_layer2_1_bn1 :: 0.0011839866638183594
+_layer2_1_conv2 :: 0.033215999603271484
+_layer2_1_bn2 :: 0.0012149810791015625
+_layer2_1_conv3 :: 0.01852703094482422
+_layer2_1_bn3 :: 0.0044438838958740234
+_layer2_1_relu :: 0.0012979507446289062
+_layer2_1 :: 0.07869505882263184
+_layer2_2_conv1 :: 0.019124984741210938
+_layer2_2_bn1 :: 0.001264810562133789
+_layer2_2_conv2 :: 0.030796051025390625
+_layer2_2_bn2 :: 0.0013129711151123047
+_layer2_2_conv3 :: 0.01927971839904785
+_layer2_2_bn3 :: 0.004415988922119141
+_layer2_2_relu :: 0.0012087821960449219
+_layer2_2 :: 0.08075809478759766
+_layer2_3_conv1 :: 0.0200502872467041
+_layer2_3_bn1 :: 0.0013041496276855469
+_layer2_3_conv2 :: 0.03085803985595703
+_layer2_3_bn2 :: 0.0012879371643066406
+_layer2_3_conv3 :: 0.018572092056274414
+_layer2_3_bn3 :: 0.0048220157623291016
+_layer2_3_relu :: 0.0014560222625732422
+_layer2_3 :: 0.08244824409484863
+_layer2 :: 0.4053030014038086
+_layer3_0_conv1 :: 0.0354771614074707
+_layer3_0_bn1 :: 0.0024030208587646484
+_layer3_0_conv2 :: 0.03194618225097656
+_layer3_0_bn2 :: 0.0006289482116699219
+_layer3_0_conv3 :: 0.013363838195800781
+_layer3_0_bn3 :: 0.0022361278533935547
+_layer3_0_relu :: 0.0007030963897705078
+_layer3_0_downsample :: 0.036429643630981445
+_layer3_0 :: 0.12585806846618652
+_layer3_1_conv1 :: 0.013917207717895508
+_layer3_1_bn1 :: 0.0007469654083251953
+_layer3_1_conv2 :: 0.026871204376220703
+_layer3_1_bn2 :: 0.0008919239044189453
+_layer3_1_conv3 :: 0.016382932662963867
+_layer3_1_bn3 :: 0.0024797916412353516
+_layer3_1_relu :: 0.0005970001220703125
+_layer3_1 :: 0.0661921501159668
+_layer3_2_conv1 :: 0.014095783233642578
+_layer3_2_bn1 :: 0.0007801055908203125
+_layer3_2_conv2 :: 0.02927398681640625
+_layer3_2_bn2 :: 0.0009958744049072266
+_layer3_2_conv3 :: 0.012768983840942383
+_layer3_2_bn3 :: 0.0022208690643310547
+_layer3_2_relu :: 0.0005393028259277344
+_layer3_2 :: 0.06554222106933594
+_layer3_3_conv1 :: 0.014452934265136719
+_layer3_3_bn1 :: 0.0006861686706542969
+_layer3_3_conv2 :: 0.029829978942871094
+_layer3_3_bn2 :: 0.0009031295776367188
+_layer3_3_conv3 :: 0.014113903045654297
+_layer3_3_bn3 :: 0.00228118896484375
+_layer3_3_relu :: 0.0005970001220703125
+_layer3_3 :: 0.06881499290466309
+_layer3_4_conv1 :: 0.014651060104370117
+_layer3_4_bn1 :: 0.0006630420684814453
+_layer3_4_conv2 :: 0.029187917709350586
+_layer3_4_bn2 :: 0.0008318424224853516
+_layer3_4_conv3 :: 0.013988256454467773
+_layer3_4_bn3 :: 0.002234935760498047
+_layer3_4_relu :: 0.0005850791931152344
+_layer3_4 :: 0.06627774238586426
+_layer3_5_conv1 :: 0.014870882034301758
+_layer3_5_bn1 :: 0.0007579326629638672
+_layer3_5_conv2 :: 0.02888798713684082
+_layer3_5_bn2 :: 0.0006499290466308594
+_layer3_5_conv3 :: 0.014091968536376953
+_layer3_5_bn3 :: 0.0022759437561035156
+_layer3_5_relu :: 0.0005831718444824219
+_layer3_5 :: 0.06636500358581543
+_layer3 :: 0.45319175720214844
+_layer4_0_conv1 :: 0.028800010681152344
+_layer4_0_bn1 :: 0.0012619495391845703
+_layer4_0_conv2 :: 0.03322005271911621
+_layer4_0_bn2 :: 0.0006310939788818359
+_layer4_0_conv3 :: 0.015498876571655273
+_layer4_0_bn3 :: 0.0012042522430419922
+_layer4_0_relu :: 0.00017595291137695312
+_layer4_0_downsample :: 0.031867027282714844
+_layer4_0 :: 0.12029385566711426
+_layer4_1_conv1 :: 0.017134904861450195
+_layer4_1_bn1 :: 0.0004968643188476562
+_layer4_1_conv2 :: 0.03079509735107422
+_layer4_1_bn2 :: 0.0005466938018798828
+_layer4_1_conv3 :: 0.015526771545410156
+_layer4_1_bn3 :: 0.0013968944549560547
+_layer4_1_relu :: 0.00029206275939941406
+_layer4_1 :: 0.06325817108154297
+_layer4_2_conv1 :: 0.015663862228393555
+_layer4_2_bn1 :: 0.0005218982696533203
+_layer4_2_conv2 :: 0.03007793426513672
+_layer4_2_bn2 :: 0.00047087669372558594
+_layer4_2_conv3 :: 0.015342235565185547
+_layer4_2_bn3 :: 0.0012011528015136719
+_layer4_2_relu :: 0.0002899169921875
+_layer4_2 :: 0.06568384170532227
+_layer4 :: 0.26447296142578125
+_avgpool :: 0.0003840923309326172
+_fc :: 0.0006000995635986328
+
+mem_cpu | Average Mem Consumption of Each Layer
+_conv1 :: 195.3
+_bn1 :: 156.240268
+_relu :: 0.00041999999999999996
+_maxpool :: 29.30042
+_layer1_0_conv1 :: 48.849999999999994
+_layer1_0_bn1 :: 39.08026799999999
+_layer1_0_conv2 :: 48.849999999999994
+_layer1_0_bn2 :: 39.08026799999999
+_layer1_0_conv3 :: 195.3
+_layer1_0_bn3 :: 156.25101199999997
+_layer1_0_relu :: 0.00041999999999999996
+_layer1_0_downsample :: 351.55101199999996
+_layer1_0 :: 976.6125479999997
+_layer1_1_conv1 :: 48.849999999999994
+_layer1_1_bn1 :: 39.08026799999999
+_layer1_1_conv2 :: 48.849999999999994
+_layer1_1_bn2 :: 39.08026799999999
+_layer1_1_conv3 :: 195.3
+_layer1_1_bn3 :: 156.25101199999997
+_layer1_1_relu :: 0.00041999999999999996
+_layer1_1 :: 585.951536
+_layer1_2_conv1 :: 48.849999999999994
+_layer1_2_bn1 :: 39.08026799999999
+_layer1_2_conv2 :: 48.849999999999994
+_layer1_2_bn2 :: 39.08026799999999
+_layer1_2_conv3 :: 195.3
+_layer1_2_bn3 :: 156.25101199999997
+_layer1_2_relu :: 0.00041999999999999996
+_layer1_2 :: 585.951536
+_layer1 :: 2148.4656199999995
+_layer2_0_conv1 :: 97.65
+_layer2_0_bn1 :: 78.12052400000002
+_layer2_0_conv2 :: 24.4
+_layer2_0_bn2 :: 19.530524
+_layer2_0_conv3 :: 97.65
+_layer2_0_bn3 :: 78.162012
+_layer2_0_relu :: 0.00041999999999999996
+_layer2_0_downsample :: 175.81201199999995
+_layer2_0 :: 634.8550479999999
+_layer2_1_conv1 :: 24.4
+_layer2_1_bn1 :: 19.530524
+_layer2_1_conv2 :: 24.4
+_layer2_1_bn2 :: 19.530524
+_layer2_1_conv3 :: 97.65
+_layer2_1_bn3 :: 78.162012
+_layer2_1_relu :: 0.00041999999999999996
+_layer2_1 :: 293.0130360000001
+_layer2_2_conv1 :: 24.4
+_layer2_2_bn1 :: 19.530524
+_layer2_2_conv2 :: 24.4
+_layer2_2_bn2 :: 19.530516
+_layer2_2_conv3 :: 97.65
+_layer2_2_bn3 :: 78.162012
+_layer2_2_relu :: 0.00041999999999999996
+_layer2_2 :: 293.0130360000001
+_layer2_3_conv1 :: 24.4
+_layer2_3_bn1 :: 19.530524
+_layer2_3_conv2 :: 24.4
+_layer2_3_bn2 :: 19.530524
+_layer2_3_conv3 :: 97.65
+_layer2_3_bn3 :: 78.162012
+_layer2_3_relu :: 0.00041999999999999996
+_layer2_3 :: 293.0130360000001
+_layer2 :: 1513.834156
+_layer3_0_conv1 :: 48.849999999999994
+_layer3_0_bn1 :: 39.081003999999986
+_layer3_0_conv2 :: 12.2
+_layer3_0_bn2 :: 9.771012
+_layer3_0_conv3 :: 48.849999999999994
+_layer3_0_bn3 :: 39.10401199999998
+_layer3_0_relu :: 0.00041999999999999996
+_layer3_0_downsample :: 87.944012
+_layer3_0 :: 317.52004800000003
+_layer3_1_conv1 :: 12.2
+_layer3_1_bn1 :: 9.771004000000001
+_layer3_1_conv2 :: 12.2
+_layer3_1_bn2 :: 9.771012
+_layer3_1_conv3 :: 48.849999999999994
+_layer3_1_bn3 :: 39.10401199999998
+_layer3_1_relu :: 0.00041999999999999996
+_layer3_1 :: 146.566036
+_layer3_2_conv1 :: 12.2
+_layer3_2_bn1 :: 9.771012
+_layer3_2_conv2 :: 12.2
+_layer3_2_bn2 :: 9.771012
+_layer3_2_conv3 :: 48.849999999999994
+_layer3_2_bn3 :: 39.10401199999998
+_layer3_2_relu :: 0.00041999999999999996
+_layer3_2 :: 146.566036
+_layer3_3_conv1 :: 12.2
+_layer3_3_bn1 :: 9.771012
+_layer3_3_conv2 :: 12.2
+_layer3_3_bn2 :: 9.771004000000001
+_layer3_3_conv3 :: 48.849999999999994
+_layer3_3_bn3 :: 39.10401199999998
+_layer3_3_relu :: 0.00041999999999999996
+_layer3_3 :: 146.566036
+_layer3_4_conv1 :: 12.2
+_layer3_4_bn1 :: 9.771012
+_layer3_4_conv2 :: 12.2
+_layer3_4_bn2 :: 9.771012
+_layer3_4_conv3 :: 48.849999999999994
+_layer3_4_bn3 :: 39.10401199999998
+_layer3_4_relu :: 0.00041999999999999996
+_layer3_4 :: 146.566036
+_layer3_5_conv1 :: 12.2
+_layer3_5_bn1 :: 9.771012
+_layer3_5_conv2 :: 12.2
+_layer3_5_bn2 :: 9.771012
+_layer3_5_conv3 :: 48.849999999999994
+_layer3_5_bn3 :: 39.10400399999999
+_layer3_5_relu :: 0.00041999999999999996
+_layer3_5 :: 146.566036
+_layer3 :: 1050.280228
+_layer4_0_conv1 :: 24.4
+_layer4_0_bn1 :: 19.562012
+_layer4_0_conv2 :: 6.1
+_layer4_0_bn2 :: 4.8920119999999985
+_layer4_0_conv3 :: 24.4
+_layer4_0_bn3 :: 19.628012000000002
+_layer4_0_relu :: 0.00041999999999999996
+_layer4_0_downsample :: 44.03801199999999
+_layer4_0 :: 158.940048
+_layer4_1_conv1 :: 6.1
+_layer4_1_bn1 :: 4.8920119999999985
+_layer4_1_conv2 :: 6.1
+_layer4_1_bn2 :: 4.8920119999999985
+_layer4_1_conv3 :: 24.4
+_layer4_1_bn3 :: 19.628012000000002
+_layer4_1_relu :: 0.00041999999999999996
+_layer4_1 :: 73.37203600000001
+_layer4_2_conv1 :: 6.1
+_layer4_2_bn1 :: 4.8920119999999985
+_layer4_2_conv2 :: 6.1
+_layer4_2_bn2 :: 4.8920119999999985
+_layer4_2_conv3 :: 24.4
+_layer4_2_bn3 :: 19.628012000000002
+_layer4_2_relu :: 0.00041999999999999996
+_layer4_2 :: 73.37203600000001
+_layer4 :: 305.69412
+_avgpool :: 0.016432000000000002
+_fc :: 0.00824

@@ -19,7 +19,6 @@ class ProfResnet(object):
         self.residual = None
     
     def itrResLayer(self, model, parentLayer, input, recursive=False):
-        print("_", end="")
         # make sure inner layers wont mess up residual steps
         x = input.clone()
 
@@ -66,17 +65,20 @@ class ProfResnet(object):
             prof_report = str(prof.key_averages().table()).split("\n")
             mr.get_mem(name, prof_report, usingcuda)
 
+            print(name, "_in ",  x.shape, ' ', x.element_size() * x.nelement(), sep='')
+
             # find runtime
             tt.tic(name)
-            print("tictoc", name)
             x = layer(x)
             tt.toc(name)
+
+            print(name, "_out ", x.shape, ' ', x.element_size() * x.nelement(), sep='')
 
 
 if __name__ == "__main__":
 
     resnet = torchvision.models.resnet50(pretrained=True).to(device)
-    x = torch.rand(1, 3, 224, 224).to(device)
+    x = torch.rand(1, 3, 800, 800).to(device)
     # residual = x.clone()
 
     for name, layer in resnet.named_children():

@@ -1,0 +1,149 @@
+digraph FasterRCNN {
+
+    images [label="[images]"];
+    images -> backbonefpn_body;
+
+    subgraph cluster_0 {
+        label="backbonefpn";
+
+        subgraph cluster_0_0 {
+            label="body";
+
+            backbonefpn_body;
+        }
+
+        x [label="[x]"];
+        backbonefpn_body -> x;
+
+        subgraph cluster_0_1 {
+            label="fpn";
+
+            subgraph cluster_0_1_0 {
+                label="inner";
+                inner_0; inner_1; inner_2; inner_3;
+            }
+
+            subgraph cluster_0_1_1 {
+                label="layer";
+                layer_0; layer_1; layer_2; layer_3;
+            }
+
+            interpolate_0 [label="interpolate"]; 
+            interpolate_1 [label="interpolate"]; 
+            interpolate_2 [label="interpolate"];
+            sum_0 [label="+"]; sum_1[label="+"]; sum_2[label="+"];
+
+            inner_3 -> layer_3;
+            inner_3 -> interpolate_2;
+            inner_2 -> sum_2;
+            inner_1 -> sum_1;
+            inner_0 -> sum_0;
+
+            interpolate_2 -> sum_2;
+            interpolate_1 -> sum_1;
+            interpolate_0 -> sum_0;
+            
+            sum_2 -> layer_2;
+            sum_2 -> interpolate_1;
+            sum_1 -> layer_1;
+            sum_1 -> interpolate_0;
+            sum_0 -> layer_0;
+
+            // inner_3 -> layer_3;
+
+            // inner_2 -> sum_2;
+            // inner_3 -> interpolate_2;
+            // interpolate_2 -> sum_2;
+            // sum_2 -> layer_2;
+
+            // inner_1 -> sum_1;
+            // sum_2 -> interpolate_1;
+            // interpolate_1 -> sum_1;
+            // sum_1 -> layer_1;
+
+            // inner_0 -> sum_0;
+            // sum_1 -> interpolate_0;
+            // interpolate_0 -> sum_0;
+            // sum_0 -> layer_0;
+
+        }
+
+        x -> inner_0 [label="x[0]"];
+        x -> inner_1 [label="x[1]"];
+        x -> inner_2 [label="x[2]"];
+        x -> inner_3 [label="x[3]"];
+
+    }
+
+    features [label="[features]"]
+
+    layer_3 -> features [label="out[0]"];
+    layer_2 -> features [label="out[1]"];
+    layer_1 -> features [label="out[2]"];
+    layer_0 -> features [label="out[3]"];
+
+    subgraph cluster_1 {
+        label="rpn"
+
+        subgraph cluster_1_0 {
+            label="head"
+
+            
+            conv -> cls_logits;
+            conv -> bbox_pred;
+
+        }
+
+        subgraph cluster_1_1 {
+            label="anchor_generator"
+
+            cls_logits -> anchor_generator;
+            bbox_pred -> anchor_generator;
+
+        }
+    }
+
+    features -> conv;
+    
+    proposals [label="[proposals]"];
+    anchor_generator -> proposals;
+
+    subgraph cluster_2 {
+        label="roi_heads"
+
+        subgraph cluster_2_0 {
+            label="box_roi_pool"
+            box_roi_pool;
+        }
+
+        subgraph cluster_2_1 {
+            label="box_head"
+            fc6 -> fc7;
+        }
+        box_roi_pool -> fc6 [label="(flatten)"]; 
+
+        subgraph cluster_2_2 {
+            label="box_predictor"
+            cls_score;
+            bbox_pred1 [label="bbox_pred"];
+        }
+        fc7 -> cls_score;
+        fc7 -> bbox_pred1;
+
+        subgraph cluster_2_3 {
+            label="postprocess_detection"
+            postprocess_detection;
+        }
+        cls_score -> postprocess_detection;
+        bbox_pred1 -> postprocess_detection;
+        
+    }
+    proposals -> postprocess_detection;
+    features -> box_roi_pool;
+    proposals -> box_roi_pool;
+
+    detections [label="[detections]"];
+    postprocess_detection -> detections;
+
+
+}

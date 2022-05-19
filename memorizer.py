@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 
+plt.rcParams['font.size'] = 5
+
 class MemRec(object):
 
     def __init__(self):
@@ -114,7 +116,7 @@ class MemRec(object):
         plt.bar(layernames, avg_mems, width = 0.4)
         
         plt.xlabel("layernames")
-        plt.xticks(rotation=45, ha="right")
+        plt.xticks(rotation=20, ha="right")
         plt.ylabel("avg_mem_cpu")
         plt.savefig("layer-avg_mem_cpu.png")
 
