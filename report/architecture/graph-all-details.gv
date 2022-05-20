@@ -1,0 +1,658 @@
+digraph {
+    x [label="[x]"];
+
+    
+    subgraph FasterRCNN {
+        label="FasterRCNN"
+
+        images [label="[images]"];
+        images -> backbonefpn_body;
+
+        subgraph cluster_0 {
+            label="backbonefpn";
+
+            subgraph cluster_0_0 {
+                label="body";
+
+                backbonefpn_body;
+            }
+
+           
+            backbonefpn_body -> x;
+
+            subgraph cluster_0_1 {
+                label="fpn";
+
+                subgraph cluster_0_1_0 {
+                    label="inner";
+                    inner_0; inner_1; inner_2; inner_3;
+                }
+
+                subgraph cluster_0_1_1 {
+                    label="layer";
+                    layer_0; layer_1; layer_2; layer_3;
+                }
+
+                interpolate_0 [label="interpolate"]; 
+                interpolate_1 [label="interpolate"]; 
+                interpolate_2 [label="interpolate"];
+                sum_0 [label="+"]; sum_1[label="+"]; sum_2[label="+"];
+
+                inner_3 -> layer_3;
+                inner_3 -> interpolate_2;
+                inner_2 -> sum_2;
+                inner_1 -> sum_1;
+                inner_0 -> sum_0;
+
+                interpolate_2 -> sum_2;
+                interpolate_1 -> sum_1;
+                interpolate_0 -> sum_0;
+                
+                sum_2 -> layer_2;
+                sum_2 -> interpolate_1;
+                sum_1 -> layer_1;
+                sum_1 -> interpolate_0;
+                sum_0 -> layer_0;
+
+                // inner_3 -> layer_3;
+
+                // inner_2 -> sum_2;
+                // inner_3 -> interpolate_2;
+                // interpolate_2 -> sum_2;
+                // sum_2 -> layer_2;
+
+                // inner_1 -> sum_1;
+                // sum_2 -> interpolate_1;
+                // interpolate_1 -> sum_1;
+                // sum_1 -> layer_1;
+
+                // inner_0 -> sum_0;
+                // sum_1 -> interpolate_0;
+                // interpolate_0 -> sum_0;
+                // sum_0 -> layer_0;
+
+            }
+
+            x -> inner_0 [label="x[0]"];
+            x -> inner_1 [label="x[1]"];
+            x -> inner_2 [label="x[2]"];
+            x -> inner_3 [label="x[3]"];
+
+        }
+
+        features [label="[features]"]
+
+        layer_3 -> features [label="out[0]"];
+        layer_2 -> features [label="out[1]"];
+        layer_1 -> features [label="out[2]"];
+        layer_0 -> features [label="out[3]"];
+
+        subgraph cluster_1 {
+            label="rpn"
+
+            subgraph cluster_1_0 {
+                label="head"
+
+                
+                conv -> cls_logits;
+                conv -> bbox_pred;
+
+            }
+
+            subgraph cluster_1_1 {
+                label="anchor_generator"
+
+                cls_logits -> anchor_generator;
+                bbox_pred -> anchor_generator;
+
+            }
+        }
+
+        features -> conv;
+        
+        proposals [label="[proposals]"];
+        anchor_generator -> proposals;
+
+        subgraph cluster_2 {
+            label="roi_heads"
+
+            subgraph cluster_2_0 {
+                label="box_roi_pool"
+                box_roi_pool;
+            }
+
+            subgraph cluster_2_1 {
+                label="box_head"
+                fc6 -> fc7;
+            }
+            box_roi_pool -> fc6 [label="(flatten)"]; 
+
+            subgraph cluster_2_2 {
+                label="box_predictor"
+                cls_score;
+                bbox_pred1 [label="bbox_pred"];
+            }
+            fc7 -> cls_score;
+            fc7 -> bbox_pred1;
+
+            subgraph cluster_2_3 {
+                label="postprocess_detection"
+                postprocess_detection;
+            }
+            cls_score -> postprocess_detection;
+            bbox_pred1 -> postprocess_detection;
+            
+        }
+        proposals -> postprocess_detection;
+        features -> box_roi_pool;
+        proposals -> box_roi_pool;
+
+        detections [label="[detections]"];
+        postprocess_detection -> detections;
+
+
+    }
+
+    subgraph backbone {
+        label="[backbone]";
+        x [label="[x]"];
+
+        images[label="[images]"];
+        maxpool;
+
+        images -> conv1;
+        conv1 -> bn1;
+        bn1 -> relu1;
+
+        subgraph cluster_0 {
+            label="[layer1]";
+
+            subgraph cluster_0_0 {
+                label="[layer1_0]";
+
+                layer1_0_relu0 [label="relu"];
+                layer1_0_relu1 [label="relu"];
+                layer1_0_relu2 [label="relu"];
+                layer1_0_add [label="+"];
+
+                layer1_0_conv1 [label="conv1"];
+                layer1_0_conv2 [label="conv2"];
+                layer1_0_conv3 [label="conv3"];
+                layer1_0_bn1 [label="bn1"];
+                layer1_0_bn2 [label="bn2"];
+                layer1_0_bn3 [label="bn3"];
+                layer1_0_downsample_relu [label="downsample_relu"];
+                layer1_0_downsample_bn [label="downsample_bn"];
+
+                // normal
+
+                layer1_0_conv1 -> layer1_0_bn1;
+                layer1_0_bn1 -> layer1_0_relu0;
+                layer1_0_relu0 -> layer1_0_conv2;
+
+                layer1_0_conv2 -> layer1_0_bn2;
+                layer1_0_bn2 -> layer1_0_relu1;
+                layer1_0_relu1 -> layer1_0_conv3;
+
+                layer1_0_conv3 -> layer1_0_bn3;
+
+                // residual
+                layer1_0_downsample_relu -> layer1_0_downsample_bn;
+
+                // add
+                layer1_0_bn3 -> layer1_0_add;
+                layer1_0_downsample_bn -> layer1_0_add;
+
+                layer1_0_add -> layer1_0_relu2;
+
+            }
+
+            subgraph cluster_0_1 {
+                label="[layer1_1]";
+
+                layer1_1_relu1 [label="[relu]"];
+                layer1_1_relu2 [label="[relu]"];
+                layer1_1_relu3 [label="[relu]"];
+                layer1_1_add [label="+"];
+
+                layer1_1_conv1 [label="[conv1]"];
+                layer1_1_conv2 [label="[conv2]"];
+                layer1_1_conv3 [label="[conv3]"];
+
+                layer1_1_bn1 [label="[bn1]"];
+                layer1_1_bn2 [label="[bn2]"];
+                layer1_1_bn3 [label="[bn3]"];
+
+                // normal
+                layer1_1_conv1 -> layer1_1_bn1;
+                layer1_1_bn1 -> layer1_1_relu1;
+
+                layer1_1_relu1 -> layer1_1_conv2;
+                layer1_1_conv2 -> layer1_1_bn2;
+                layer1_1_bn2 -> layer1_1_relu2;
+
+                layer1_1_relu2 -> layer1_1_conv3;
+                layer1_1_conv3 -> layer1_1_bn3;
+
+                // add
+                layer1_1_bn3 -> layer1_1_add;
+                
+                layer1_1_add -> layer1_1_relu3;
+
+            }
+
+            subgraph cluster_0_2 {
+                label="[layer1_2]";
+
+                layer1_2_relu1 [label="[relu]"];
+                layer1_2_relu2 [label="[relu]"];
+                layer1_2_relu3 [label="[relu]"];
+                layer1_2_add [label="+"];
+
+                layer1_2_conv1 [label="[conv1]"];
+                layer1_2_conv2 [label="[conv2]"];
+                layer1_2_conv3 [label="[conv3]"];
+
+                layer1_2_bn1 [label="[bn1]"];
+                layer1_2_bn2 [label="[bn2]"];
+                layer1_2_bn3 [label="[bn3]"];
+
+                // normal
+                layer1_2_conv1 -> layer1_2_bn1;
+                layer1_2_bn1 -> layer1_2_relu1;
+
+                layer1_2_relu1 -> layer1_2_conv2;
+                layer1_2_conv2 -> layer1_2_bn2;
+                layer1_2_bn2 -> layer1_2_relu2;
+
+                layer1_2_relu2 -> layer1_2_conv3;
+                layer1_2_conv3 -> layer1_2_bn3;
+
+                // add
+                layer1_2_bn3 -> layer1_2_add;
+                
+                layer1_2_add -> layer1_2_relu3;
+
+            }
+
+            layer1_0_relu2 -> layer1_1_conv1;
+            layer1_0_relu2 -> layer1_1_add;
+
+            layer1_1_relu3 -> layer1_2_conv1;
+            layer1_1_relu3 -> layer1_2_add;
+
+        }
+
+        maxpool -> layer1_0_conv1;
+        maxpool -> layer1_0_downsample_relu;
+        relu1 -> maxpool;
+        layer1_2_relu3 -> x;
+
+        subgraph cluster_1 {
+            label="[layer2]"
+        
+            subgraph cluster_1_0 {
+                label="[layer2_0]";
+                layer2_0_relu0 [label="relu"];
+                layer2_0_relu1 [label="relu"];
+                layer2_0_relu2 [label="relu"];
+                layer2_0_add [label="+"];
+                layer2_0_conv1 [label="conv1"];
+                layer2_0_conv2 [label="conv2"];
+                layer2_0_conv3 [label="conv3"];
+                layer2_0_bn1 [label="bn1"];
+                layer2_0_bn2 [label="bn2"];
+                layer2_0_bn3 [label="bn3"];
+                layer2_0_downsample_relu [label="downsample_relu"];
+                layer2_0_downsample_bn [label="downsample_bn"];
+                layer2_0_conv1 -> layer2_0_bn1;
+                layer2_0_bn1 -> layer2_0_relu0;
+                layer2_0_relu0 -> layer2_0_conv2;
+                layer2_0_conv2 -> layer2_0_bn2;
+                layer2_0_bn2 -> layer2_0_relu1;
+                layer2_0_relu1 -> layer2_0_conv3;
+                layer2_0_conv3 -> layer2_0_bn3;
+                layer2_0_downsample_relu -> layer2_0_downsample_bn;
+                layer2_0_bn3 -> layer2_0_add;
+                layer2_0_downsample_bn -> layer2_0_add;
+                layer2_0_add -> layer2_0_relu2;
+            }
+
+            subgraph cluster_1_1 {
+                label="[layer2_1]";
+                layer2_1_relu1 [label="[relu]"];
+                layer2_1_relu2 [label="[relu]"];
+                layer2_1_relu3 [label="[relu]"];
+                layer2_1_add [label="+"];
+                layer2_1_conv1 [label="[conv1]"];
+                layer2_1_conv2 [label="[conv2]"];
+                layer2_1_conv3 [label="[conv3]"];
+                layer2_1_bn1 [label="[bn1]"];
+                layer2_1_bn2 [label="[bn2]"];
+                layer2_1_bn3 [label="[bn3]"];
+                layer2_1_conv1 -> layer2_1_bn1;
+                layer2_1_bn1 -> layer2_1_relu1;
+                layer2_1_relu1 -> layer2_1_conv2;
+                layer2_1_conv2 -> layer2_1_bn2;
+                layer2_1_bn2 -> layer2_1_relu2;
+                layer2_1_relu2 -> layer2_1_conv3;
+                layer2_1_conv3 -> layer2_1_bn3
+                layer2_1_bn3 -> layer2_1_add;
+                layer2_1_add -> layer2_1_relu3;
+            }
+
+            subgraph cluster_1_2 {
+                label="[layer2_2]";
+                layer2_2_relu1 [label="[relu]"];
+                layer2_2_relu2 [label="[relu]"];
+                layer2_2_relu3 [label="[relu]"];
+                layer2_2_add [label="+"];
+                layer2_2_conv1 [label="[conv1]"];
+                layer2_2_conv2 [label="[conv2]"];
+                layer2_2_conv3 [label="[conv3]"];
+                layer2_2_bn1 [label="[bn1]"];
+                layer2_2_bn2 [label="[bn2]"];
+                layer2_2_bn3 [label="[bn3]"];
+                layer2_2_conv1 -> layer2_2_bn1;
+                layer2_2_bn1 -> layer2_2_relu1;
+                layer2_2_relu1 -> layer2_2_conv2;
+                layer2_2_conv2 -> layer2_2_bn2;
+                layer2_2_bn2 -> layer2_2_relu2;
+                layer2_2_relu2 -> layer2_2_conv3;
+                layer2_2_conv3 -> layer2_2_bn3
+                layer2_2_bn3 -> layer2_2_add;
+                layer2_2_add -> layer2_2_relu3;
+            }
+
+            subgraph cluster_1_3 {
+                label="[layer2_3]";
+                layer2_3_relu1 [label="[relu]"];
+                layer2_3_relu2 [label="[relu]"];
+                layer2_3_relu3 [label="[relu]"];
+                layer2_3_add [label="+"];
+                layer2_3_conv1 [label="[conv1]"];
+                layer2_3_conv2 [label="[conv2]"];
+                layer2_3_conv3 [label="[conv3]"];
+                layer2_3_bn1 [label="[bn1]"];
+                layer2_3_bn2 [label="[bn2]"];
+                layer2_3_bn3 [label="[bn3]"];
+                layer2_3_conv1 -> layer2_3_bn1;
+                layer2_3_bn1 -> layer2_3_relu1;
+                layer2_3_relu1 -> layer2_3_conv2;
+                layer2_3_conv2 -> layer2_3_bn2;
+                layer2_3_bn2 -> layer2_3_relu2;
+                layer2_3_relu2 -> layer2_3_conv3;
+                layer2_3_conv3 -> layer2_3_bn3
+                layer2_3_bn3 -> layer2_3_add;
+                layer2_3_add -> layer2_3_relu3;
+
+            }
+
+            layer2_0_relu2 -> layer2_1_conv1;
+            layer2_0_relu2 -> layer2_1_add;
+
+            layer2_1_relu3 -> layer2_2_conv1;
+            layer2_1_relu3 -> layer2_2_add;
+
+            layer2_2_relu3 -> layer2_3_conv1;
+            layer2_2_relu3 -> layer2_3_add;
+        }
+
+        layer2_3_relu3 -> x;
+
+        subgraph cluster_2{
+            label="[layer3]";
+
+            subgraph cluster_2_0{
+                label="[layer3_0]";
+                layer3_0_relu0 [label="relu"];
+                layer3_0_relu1 [label="relu"];
+                layer3_0_relu2 [label="relu"];
+                layer3_0_add [label="+"];
+                layer3_0_conv1 [label="conv1"];
+                layer3_0_conv2 [label="conv2"];
+                layer3_0_conv3 [label="conv3"];
+                layer3_0_bn1 [label="bn1"];
+                layer3_0_bn2 [label="bn2"];
+                layer3_0_bn3 [label="bn3"];
+                layer3_0_downsample_relu [label="downsample_relu"];
+                layer3_0_downsample_bn [label="downsample_bn"];
+                layer3_0_conv1 -> layer3_0_bn1;
+                layer3_0_bn1 -> layer3_0_relu0;
+                layer3_0_relu0 -> layer3_0_conv2;
+                layer3_0_conv2 -> layer3_0_bn2;
+                layer3_0_bn2 -> layer3_0_relu1;
+                layer3_0_relu1 -> layer3_0_conv3;
+                layer3_0_conv3 -> layer3_0_bn3;
+                layer3_0_downsample_relu -> layer3_0_downsample_bn;
+                layer3_0_bn3 -> layer3_0_add;
+                layer3_0_downsample_bn -> layer3_0_add;
+                layer3_0_add -> layer3_0_relu2;
+            }
+
+            subgraph cluster_2_1{
+                label="[layer3_1]";
+                layer3_1_relu1 [label="[relu]"];
+                layer3_1_relu2 [label="[relu]"];
+                layer3_1_relu3 [label="[relu]"];
+                layer3_1_add [label="+"];
+                layer3_1_conv1 [label="[conv1]"];
+                layer3_1_conv2 [label="[conv2]"];
+                layer3_1_conv3 [label="[conv3]"];
+                layer3_1_bn1 [label="[bn1]"];
+                layer3_1_bn2 [label="[bn2]"];
+                layer3_1_bn3 [label="[bn3]"];
+                layer3_1_conv1 -> layer3_1_bn1;
+                layer3_1_bn1 -> layer3_1_relu1;
+                layer3_1_relu1 -> layer3_1_conv2;
+                layer3_1_conv2 -> layer3_1_bn2;
+                layer3_1_bn2 -> layer3_1_relu2;
+                layer3_1_relu2 -> layer3_1_conv3;
+                layer3_1_conv3 -> layer3_1_bn3
+                layer3_1_bn3 -> layer3_1_add;
+                layer3_1_add -> layer3_1_relu3;
+            }
+            subgraph cluster_2_2{
+                label="[layer3_2]";
+                layer3_2_relu1 [label="[relu]"];
+                layer3_2_relu2 [label="[relu]"];
+                layer3_2_relu3 [label="[relu]"];
+                layer3_2_add [label="+"];
+                layer3_2_conv1 [label="[conv1]"];
+                layer3_2_conv2 [label="[conv2]"];
+                layer3_2_conv3 [label="[conv3]"];
+                layer3_2_bn1 [label="[bn1]"];
+                layer3_2_bn2 [label="[bn2]"];
+                layer3_2_bn3 [label="[bn3]"];
+                layer3_2_conv1 -> layer3_2_bn1;
+                layer3_2_bn1 -> layer3_2_relu1;
+                layer3_2_relu1 -> layer3_2_conv2;
+                layer3_2_conv2 -> layer3_2_bn2;
+                layer3_2_bn2 -> layer3_2_relu2;
+                layer3_2_relu2 -> layer3_2_conv3;
+                layer3_2_conv3 -> layer3_2_bn3
+                layer3_2_bn3 -> layer3_2_add;
+                layer3_2_add -> layer3_2_relu3;
+            }
+            subgraph cluster_2_3{
+                label="[layer3_3]";
+                layer3_3_relu1 [label="[relu]"];
+                layer3_3_relu2 [label="[relu]"];
+                layer3_3_relu3 [label="[relu]"];
+                layer3_3_add [label="+"];
+                layer3_3_conv1 [label="[conv1]"];
+                layer3_3_conv2 [label="[conv2]"];
+                layer3_3_conv3 [label="[conv3]"];
+                layer3_3_bn1 [label="[bn1]"];
+                layer3_3_bn2 [label="[bn2]"];
+                layer3_3_bn3 [label="[bn3]"];
+                layer3_3_conv1 -> layer3_3_bn1;
+                layer3_3_bn1 -> layer3_3_relu1;
+                layer3_3_relu1 -> layer3_3_conv2;
+                layer3_3_conv2 -> layer3_3_bn2;
+                layer3_3_bn2 -> layer3_3_relu2;
+                layer3_3_relu2 -> layer3_3_conv3;
+                layer3_3_conv3 -> layer3_3_bn3
+                layer3_3_bn3 -> layer3_3_add;
+                layer3_3_add -> layer3_3_relu3;
+            }
+            subgraph cluster_2_4{
+                label="[layer3_4]";
+                layer3_4_relu1 [label="[relu]"];
+                layer3_4_relu2 [label="[relu]"];
+                layer3_4_relu3 [label="[relu]"];
+                layer3_4_add [label="+"];
+                layer3_4_conv1 [label="[conv1]"];
+                layer3_4_conv2 [label="[conv2]"];
+                layer3_4_conv3 [label="[conv3]"];
+                layer3_4_bn1 [label="[bn1]"];
+                layer3_4_bn2 [label="[bn2]"];
+                layer3_4_bn3 [label="[bn3]"];
+                layer3_4_conv1 -> layer3_4_bn1;
+                layer3_4_bn1 -> layer3_4_relu1;
+                layer3_4_relu1 -> layer3_4_conv2;
+                layer3_4_conv2 -> layer3_4_bn2;
+                layer3_4_bn2 -> layer3_4_relu2;
+                layer3_4_relu2 -> layer3_4_conv3;
+                layer3_4_conv3 -> layer3_4_bn3
+                layer3_4_bn3 -> layer3_4_add;
+                layer3_4_add -> layer3_4_relu3;
+            }
+            subgraph cluster_2_5{
+                label="[layer3_5]";
+                layer3_5_relu1 [label="[relu]"];
+                layer3_5_relu2 [label="[relu]"];
+                layer3_5_relu3 [label="[relu]"];
+                layer3_5_add [label="+"];
+                layer3_5_conv1 [label="[conv1]"];
+                layer3_5_conv2 [label="[conv2]"];
+                layer3_5_conv3 [label="[conv3]"];
+                layer3_5_bn1 [label="[bn1]"];
+                layer3_5_bn2 [label="[bn2]"];
+                layer3_5_bn3 [label="[bn3]"];
+                layer3_5_conv1 -> layer3_5_bn1;
+                layer3_5_bn1 -> layer3_5_relu1;
+                layer3_5_relu1 -> layer3_5_conv2;
+                layer3_5_conv2 -> layer3_5_bn2;
+                layer3_5_bn2 -> layer3_5_relu2;
+                layer3_5_relu2 -> layer3_5_conv3;
+                layer3_5_conv3 -> layer3_5_bn3
+                layer3_5_bn3 -> layer3_5_add;
+                layer3_5_add -> layer3_5_relu3;
+            }
+            layer3_0_relu2 -> layer3_1_conv1;
+            layer3_0_relu2 -> layer3_1_add;
+            layer3_1_relu3 -> layer3_2_conv1;
+            layer3_1_relu3 -> layer3_2_add;
+            layer3_2_relu3 -> layer3_3_conv1;
+            layer3_2_relu3 -> layer3_3_add;
+            layer3_3_relu3 -> layer3_4_conv1;
+            layer3_3_relu3 -> layer3_4_add;
+            layer3_4_relu3 -> layer3_5_conv1;
+            layer3_4_relu3 -> layer3_5_add;
+            // layer3_5_relu3 -> layer3_6_conv1;
+            // layer3_5_relu3 -> layer3_6_add;
+        
+        }
+
+        layer3_5_relu3 -> x;
+
+        subgraph cluster_3 {
+            label="[layer4]";
+
+            subgraph cluster_3_0 {
+                label="[layer4_0]";
+                layer4_0_relu0 [label="relu"];
+                layer4_0_relu1 [label="relu"];
+                layer4_0_relu2 [label="relu"];
+                layer4_0_add [label="+"];
+                layer4_0_conv1 [label="conv1"];
+                layer4_0_conv2 [label="conv2"];
+                layer4_0_conv3 [label="conv3"];
+                layer4_0_bn1 [label="bn1"];
+                layer4_0_bn2 [label="bn2"];
+                layer4_0_bn3 [label="bn3"];
+                layer4_0_downsample_relu [label="downsample_relu"];
+                layer4_0_downsample_bn [label="downsample_bn"];
+                layer4_0_conv1 -> layer4_0_bn1;
+                layer4_0_bn1 -> layer4_0_relu0;
+                layer4_0_relu0 -> layer4_0_conv2;
+                layer4_0_conv2 -> layer4_0_bn2;
+                layer4_0_bn2 -> layer4_0_relu1;
+                layer4_0_relu1 -> layer4_0_conv3;
+                layer4_0_conv3 -> layer4_0_bn3;
+                layer4_0_downsample_relu -> layer4_0_downsample_bn;
+                layer4_0_bn3 -> layer4_0_add;
+                layer4_0_downsample_bn -> layer4_0_add;
+                layer4_0_add -> layer4_0_relu2;
+            }
+
+            subgraph cluster_3_1 {
+                label="[layer4_1]";
+                layer4_1_relu1 [label="[relu]"];
+                layer4_1_relu2 [label="[relu]"];
+                layer4_1_relu3 [label="[relu]"];
+                layer4_1_add [label="+"];
+                layer4_1_conv1 [label="[conv1]"];
+                layer4_1_conv2 [label="[conv2]"];
+                layer4_1_conv3 [label="[conv3]"];
+                layer4_1_bn1 [label="[bn1]"];
+                layer4_1_bn2 [label="[bn2]"];
+                layer4_1_bn3 [label="[bn3]"];
+                layer4_1_conv1 -> layer4_1_bn1;
+                layer4_1_bn1 -> layer4_1_relu1;
+                layer4_1_relu1 -> layer4_1_conv2;
+                layer4_1_conv2 -> layer4_1_bn2;
+                layer4_1_bn2 -> layer4_1_relu2;
+                layer4_1_relu2 -> layer4_1_conv3;
+                layer4_1_conv3 -> layer4_1_bn3
+                layer4_1_bn3 -> layer4_1_add;
+                layer4_1_add -> layer4_1_relu3;
+            }
+
+            subgraph cluster_3_2 {
+                label="[layer4_2]";
+                layer4_2_relu1 [label="[relu]"];
+                layer4_2_relu2 [label="[relu]"];
+                layer4_2_relu3 [label="[relu]"];
+                layer4_2_add [label="+"];
+                layer4_2_conv1 [label="[conv1]"];
+                layer4_2_conv2 [label="[conv2]"];
+                layer4_2_conv3 [label="[conv3]"];
+                layer4_2_bn1 [label="[bn1]"];
+                layer4_2_bn2 [label="[bn2]"];
+                layer4_2_bn3 [label="[bn3]"];
+                layer4_2_conv1 -> layer4_2_bn1;
+                layer4_2_bn1 -> layer4_2_relu1;
+                layer4_2_relu1 -> layer4_2_conv2;
+                layer4_2_conv2 -> layer4_2_bn2;
+                layer4_2_bn2 -> layer4_2_relu2;
+                layer4_2_relu2 -> layer4_2_conv3;
+                layer4_2_conv3 -> layer4_2_bn3
+                layer4_2_bn3 -> layer4_2_add;
+                layer4_2_add -> layer4_2_relu3;
+            }
+
+            layer4_0_relu2 -> layer4_1_conv1;
+            layer4_0_relu2 -> layer4_1_add;
+            layer4_1_relu3 -> layer4_2_conv1;
+            layer4_1_relu3 -> layer4_2_add;
+
+        }
+
+        layer4_2_relu3 -> x
+
+        layer1_2_relu3 -> layer2_0_conv1;
+        layer1_2_relu3 -> layer2_0_downsample_relu;
+
+        layer2_3_relu3 -> layer3_0_conv1;
+        layer2_3_relu3 -> layer3_0_downsample_relu;
+
+        layer3_5_relu3 -> layer4_0_conv1;
+        layer3_5_relu3 -> layer4_0_downsample_relu;
+
+        // layer4_5_relu3 -> layer2_0_conv1;
+        // layer4_5_relu3 -> layer2_0_downsample_relu;
+
+    }
+}
