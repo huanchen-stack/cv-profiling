@@ -1,12 +1,14 @@
 digraph {
     x [label="[x]"];
-
+    images [label="[images]"];
     
+    images -> transform;
+
     subgraph FasterRCNN {
         label="FasterRCNN"
 
-        images [label="[images]"];
-        images -> backbonefpn_body;
+        
+        transform -> backbonefpn_body;
 
         subgraph cluster_0 {
             label="backbonefpn";
@@ -152,10 +154,10 @@ digraph {
 
 
     }
-    images[label="[images]"];
+    // images[label="[images]"];
     subgraph backbone {
         x [label="[x]"];
-        images -> conv1;
+        transform -> conv1;
         subgraph cluster_0 {
             label="[backbone]";
             
