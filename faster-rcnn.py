@@ -206,7 +206,9 @@ class Profiler():
             self._profile_helper(_interpolate, "backbonefpn_fpn_interpolate{}".format(idx))
             self._size_helper(f"fpn_interpolate{idx}_in", last_inner)
             inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
-            self._size_helper(f"fpn_interpolate{idx}_out", last_inner)
+            self._size_helper(f"fpn_interpolate{idx}_out", inner_top_down)
+            self._size_helper(f"sum{idx}_topdown", inner_top_down)
+            self._size_helper(f"sum{idx}_lateral", inner_lateral)
             last_inner = inner_lateral + inner_top_down
             
             results.insert(0, get_result_from_layer_blocks(last_inner, idx))
@@ -365,7 +367,6 @@ class Profiler():
                     "scores": scores[i],
                 }
             )
-
         self.args["detections"], self.args["detector_losses"] = result, losses
 
     def roi_heads_box_head_details(self):
@@ -377,11 +378,16 @@ class Profiler():
         def _fc6():
             F.relu(box_head.fc6(x))
         self._profile_helper(_fc6, "roi_heads_box_head_fc6")
+        self._size_helper("roi_heads_box_head_fc6_in", x)
         x = F.relu(box_head.fc6(x))
+        self._size_helper("roi_heads_box_head_fc6_out", x)
 
         def _fc7():
             F.relu(box_head.fc7(x))
         self._profile_helper(_fc7, "roi_heads_box_head_fc7")
+        self._size_helper("roi_heads_box_head_fc7_in", x)
+        x = F.relu(box_head.fc7(x))
+        self._size_helper("roi_heads_box_head_fc7_out", x)
 
     def roi_heads_box_predictor_details(self):
         box_predictor = self.model.roi_heads.box_predictor

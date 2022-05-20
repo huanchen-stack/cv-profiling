@@ -12,19 +12,25 @@ backbonefpn_fpn_layer_3_out :: torch.Size([1, 256, 25, 25]) 0.64 Mb
 backbonefpn_fpn_inner_2_in :: torch.Size([1, 1024, 50, 50]) 10.24 Mb
 backbonefpn_fpn_inner_2_out :: torch.Size([1, 256, 50, 50]) 2.56 Mb
 fpn_interpolate2_in :: torch.Size([1, 256, 25, 25]) 0.64 Mb
-fpn_interpolate2_out :: torch.Size([1, 256, 25, 25]) 0.64 Mb
+fpn_interpolate2_out :: torch.Size([1, 256, 50, 50]) 2.56 Mb
+sum2_topdown :: torch.Size([1, 256, 50, 50]) 2.56 Mb
+sum2_lateral :: torch.Size([1, 256, 50, 50]) 2.56 Mb
 backbonefpn_fpn_layer_2_in :: torch.Size([1, 256, 50, 50]) 2.56 Mb
 backbonefpn_fpn_layer_2_out :: torch.Size([1, 256, 50, 50]) 2.56 Mb
 backbonefpn_fpn_inner_1_in :: torch.Size([1, 512, 100, 100]) 20.48 Mb
 backbonefpn_fpn_inner_1_out :: torch.Size([1, 256, 100, 100]) 10.24 Mb
 fpn_interpolate1_in :: torch.Size([1, 256, 50, 50]) 2.56 Mb
-fpn_interpolate1_out :: torch.Size([1, 256, 50, 50]) 2.56 Mb
+fpn_interpolate1_out :: torch.Size([1, 256, 100, 100]) 10.24 Mb
+sum1_topdown :: torch.Size([1, 256, 100, 100]) 10.24 Mb
+sum1_lateral :: torch.Size([1, 256, 100, 100]) 10.24 Mb
 backbonefpn_fpn_layer_1_in :: torch.Size([1, 256, 100, 100]) 10.24 Mb
 backbonefpn_fpn_layer_1_out :: torch.Size([1, 256, 100, 100]) 10.24 Mb
 backbonefpn_fpn_inner_0_in :: torch.Size([1, 256, 200, 200]) 40.96 Mb
 backbonefpn_fpn_inner_0_out :: torch.Size([1, 256, 200, 200]) 40.96 Mb
 fpn_interpolate0_in :: torch.Size([1, 256, 100, 100]) 10.24 Mb
-fpn_interpolate0_out :: torch.Size([1, 256, 100, 100]) 10.24 Mb
+fpn_interpolate0_out :: torch.Size([1, 256, 200, 200]) 40.96 Mb
+sum0_topdown :: torch.Size([1, 256, 200, 200]) 40.96 Mb
+sum0_lateral :: torch.Size([1, 256, 200, 200]) 40.96 Mb
 backbonefpn_fpn_layer_0_in :: torch.Size([1, 256, 200, 200]) 40.96 Mb
 backbonefpn_fpn_layer_0_out :: torch.Size([1, 256, 200, 200]) 40.96 Mb
 backbone_fpn_out([features])[0] :: torch.Size([1, 256, 200, 200]) 40.96 Mb
@@ -78,6 +84,10 @@ roi_heads_box_predictor_cls_scores_in :: torch.Size([1000, 1024]) 4.096 Mb
 roi_heads_box_predictor_bbox_pred_in :: torch.Size([1000, 1024]) 4.096 Mb
 roi_heads_box_predictor_cls_scores_out :: torch.Size([1000, 91]) 0.364 Mb
 roi_heads_box_predictor_bbox_pred_out :: torch.Size([1000, 364]) 1.456 Mb
+roi_heads_box_head_fc6_in :: torch.Size([1000, 12544]) 50.176 Mb
+roi_heads_box_head_fc6_out :: torch.Size([1000, 1024]) 4.096 Mb
+roi_heads_box_head_fc7_in :: torch.Size([1000, 1024]) 4.096 Mb
+roi_heads_box_head_fc7_out :: torch.Size([1000, 1024]) 4.096 Mb
 ------------------------------------------------
 Average Time of Each Layer
 get_original_images_sizes :: 5.698204040527344e-05

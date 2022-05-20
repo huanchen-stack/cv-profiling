@@ -89,8 +89,15 @@ if __name__ == "__main__":
 
     for i in range(2):
         profResnet = ProfResnet()
-        profResnet.itrResLayer(resnet, "", x, recursive=True)
+        profResnet.itrResLayer(resnet, "", x, recursive=False)
         # break
+
+    tt.tic("resnet50")
+    resnet(x)
+    tt.toc("resnet50")
+    tt.tic("resnet50")
+    resnet(x)
+    tt.toc("resnet50")
 
     tt.report(sample=False)
     mr.report(sample=False)
