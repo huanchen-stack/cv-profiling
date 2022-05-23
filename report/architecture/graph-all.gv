@@ -158,10 +158,11 @@ digraph {
             subgraph cluster_2_2 {
                 label="box_predictor"
                 cls_score;
+                fc7 -> cls_score [label="4.096 Mb"];
+                fc7 -> bbox_pred1 [label="4.096 Mb"];
                 // bbox_pred1 [label="bbox_pred"];
             }
-            fc7 -> cls_score [label="4.096 Mb"];
-            fc7 -> bbox_pred1 [label="4.096 Mb"];
+            
 
             subgraph cluster_2_3 {
                 label="postprocess_detection"
