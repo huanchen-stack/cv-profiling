@@ -32,8 +32,8 @@ def _default_anchorgen():
     return AnchorGenerator(anchor_sizes, aspect_ratios)
 
 def _tensor_size(tensor):
-    tensor.to(device)
     return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
+
 
 class Profiler():
     def __init__(self):
@@ -118,15 +118,17 @@ class Profiler():
         # backbonefpn_body setup
         backbonefpn_body = self.model.backbone.body
         # forward
+        self.args["x"] = backbonefpn_body(self.images.tensors)
         def _backbonefpn_body():
-            self.args["x"] = backbonefpn_body(self.images.tensors)
+            backbonefpn_body(self.images.tensors)
         self._profile_helper(_backbonefpn_body, "backbonefpn_body")
 
         # backbonefpn_fpn setup 
         backbonefpn_fpn = self.model.backbone.fpn
         # forward
+        self.args["features"] = backbonefpn_fpn(self.args["x"])
         def _backbonefpn_fpn():
-            self.args["features"] = backbonefpn_fpn(self.args["x"])
+            backbonefpn_fpn(self.args["x"])
         self._profile_helper(_backbonefpn_fpn, "backbonefpn_fpn")
 
         # feature_ list setup
@@ -202,8 +204,9 @@ class Profiler():
             inner_lateral = get_result_from_inner_blocks(x[idx], idx)
             feat_shape = inner_lateral.shape[-2:]
 
+            inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
             def _interpolate():
-                inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
+                F.interpolate(last_inner, size=feat_shape, mode="nearest")
             self._profile_helper(_interpolate, "backbonefpn_fpn_interpolate{}".format(idx))
             self._size_helper(f"fpn_interpolate{idx}_in", last_inner)
             inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
@@ -217,6 +220,7 @@ class Profiler():
         # extra layer
         if backbonefpn_fpn.extra_blocks is not None:
             names.append("pool")
+            F.max_pool2d(x[-1], 1, 2, 0)
             def _extra():
                 x.append(F.max_pool2d(x[-1], 1, 2, 0))
             self._profile_helper(_extra, "backbonefpn_fpn_extra")
@@ -324,21 +328,24 @@ class Profiler():
 
         image_shapes = self.images.image_sizes
 
+        self.args["box_features"] = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
         def _box_roi_pool():
-            self.args["box_features"] = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
+            box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
         self._profile_helper(_box_roi_pool, "roi_heads_box_roi_pool")
         self._size_helper("roi_head_box_roi_pool", self.args["box_features"])
         # box_features = box_roi_pool(self.args["features"], self.args["proposals"], self.images.image_sizes)
 
+        self.args["box_features_"] = box_head(self.args["box_features"])
         def _box_head():
-            self.args["box_features_"] = box_head(self.args["box_features"])
+            box_head(self.args["box_features"])
         self._profile_helper(_box_head, "roi_heads_box_head")
         self._size_helper("roi_heads_box_head_in", self.args["box_features"])
         self._size_helper("roi_heads_box_head_out", self.args["box_features_"])
         # box_features = box_head(box_features)
 
+        self.args["class_logits"], self.args["box_regression"] = box_predictor(self.args["box_features_"])
         def _box_predictor():
-            self.args["class_logits"], self.args["box_regression"] = box_predictor(self.args["box_features_"])
+            box_predictor(self.args["box_features_"])
         self._profile_helper(_box_predictor, "roi_heads_box_predictor")
         self._size_helper("roi_heads_box_predictor_cls_scores_in", self.args["box_features_"])
         self._size_helper("roi_heads_box_predictor_bbox_pred_in", self.args["box_features_"])
@@ -346,16 +353,20 @@ class Profiler():
         self._size_helper("roi_heads_box_predictor_bbox_pred_out", self.args["box_regression"])
         # class_logits, box_regression = box_predictor(box_features)
 
+        boxes, scores, labels = self.model.roi_heads.postprocess_detections(
+                                    self.args["class_logits"], self.args["box_regression"], 
+                                    self.args["proposals"], self.images.image_sizes
+                                )
         def _postprocess_detections():
             self.model.roi_heads.postprocess_detections(
                 self.args["class_logits"], self.args["box_regression"], 
                 self.args["proposals"], self.images.image_sizes
             )
         self._profile_helper(_postprocess_detections, "roi_heads_postprocess_detections")
-        boxes, scores, labels = self.model.roi_heads.postprocess_detections(
-                                    self.args["class_logits"], self.args["box_regression"], 
-                                    self.args["proposals"], self.images.image_sizes
-                                )
+        # boxes, scores, labels = self.model.roi_heads.postprocess_detections(
+        #                             self.args["class_logits"], self.args["box_regression"], 
+        #                             self.args["proposals"], self.images.image_sizes
+        #                         )
         # in per image inferences, num_images = 0, thus takes VERY small time/mem
         result = []
         losses = {}
@@ -376,19 +387,21 @@ class Profiler():
         # flatten should take VERY small amount of time and memory
         x = x.flatten(start_dim=1)
 
+        tmp_x = F.relu(box_head.fc6(x))
         def _fc6():
             F.relu(box_head.fc6(x))
         self._profile_helper(_fc6, "roi_heads_box_head_fc6")
         self._size_helper("roi_heads_box_head_fc6_in", x)
-        x = F.relu(box_head.fc6(x))
         self._size_helper("roi_heads_box_head_fc6_out", x)
+        x = tmp_x
 
+        tmp_x = F.relu(box_head.fc7(x))
         def _fc7():
             F.relu(box_head.fc7(x))
         self._profile_helper(_fc7, "roi_heads_box_head_fc7")
         self._size_helper("roi_heads_box_head_fc7_in", x)
-        x = F.relu(box_head.fc7(x))
         self._size_helper("roi_heads_box_head_fc7_out", x)
+        x = tmp_x
 
     def roi_heads_box_predictor_details(self):
         box_predictor = self.model.roi_heads.box_predictor
@@ -396,10 +409,12 @@ class Profiler():
         # flatten should take VERY small amount of time and memory
         x = x.flatten(start_dim=1)
         
+        box_predictor.cls_score(x)
         def _cls_score():
             box_predictor.cls_score(x)
         self._profile_helper(_cls_score, "roi_heads_box_predictor_cls_score(linear)")
         
+        box_predictor.bbox_pred(x)
         def _bbox_pred():
             box_predictor.bbox_pred(x)
         self._profile_helper(_bbox_pred, "roi_heads_box_predictor_bbox_pred(linear)")
