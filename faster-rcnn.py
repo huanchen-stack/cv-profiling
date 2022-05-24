@@ -427,10 +427,13 @@ class Profiler():
         self.backbonefpn_details()
         self.backbonefpn_fpn_details()  # uncomment to reveal details
 
+        self.rpn_head()
         self._profile_helper(self.rpn_head, "rpn_head_on_{}_features".format(len(self.args["features_"])))
         self.rpn_head_details()  # uncomment to reveal details
+        # self.rpn_anchor_generator()
         self._profile_helper(self.rpn_anchor_generator, "rpn_anchor_generator")
 
+        self.roi_heads()
         self._profile_helper(self.roi_heads, "roi_heads")
         self.roi_heads_details()  # uncomment to reveal details
 
