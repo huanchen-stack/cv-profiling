@@ -1,39 +1,40 @@
 digraph {
 
-    // \ntime: \ncpu: \ncuda: \n
-    transform       [label="transform"];
-    conv1           [label="conv1"];
-    bn1             [label="bn1"];
-    relu1           [label="relu1"];
-    maxpool         [label="maxpool"];
-    layer1          [label="layer1"];
-    layer2          [label="layer2"];
-    layer3          [label="layer3"];
-    layer4          [label="layer4"];
-    backbonefpn_body[label="backbonefpn_body"];
-    inner_0         [label="inner_0"];
-    inner_1         [label="inner_1"];
-    inner_2         [label="inner_2"];
-    inner_3         [label="inner_3"];
-    interpolate_0   [label="interpolate"];
-    interpolate_1   [label="interpolate"];
-    interpolate_2   [label="interpolate"];
+    // \ntime: \ncuda: Mb\n
+    transform       [label="transform\ntime: 0.000663\ncuda: 37.20 Mb"];
+    conv1           [label="conv1\ntime: 0.00019\ncuda: 160.938 Mb\n"];
+    bn1             [label="bn1\ntime: 0.002316\ncuda: 200.0 Mb\n"];
+    relu1           [label="relu1\ntime: 0.00009\ncuda: 0 Mb\n"];
+    maxpool         [label="maxpool\ntime: 0.000114\ncuda: 59.54 Mb\n"];
+    layer1          [label="layer1\ntime: 0.002208\ncuda: 1984.23 Mb\n"];
+    layer2          [label="layer2\ntime: 0.002881\ncuda: 1403.00 Mb\n"];
+    layer3          [label="layer3\ntime: 0.004166\ncuda: 996.09 Mb\n"];
+    layer4          [label="layer4\ntime: 0.002201\ncuda: 334.90 Mb\n"];
+    backbonefpn_body[label="backbonefpn_body\ntime: 0.011029\ncuda: 3438.60 Mb\n"];
+    inner_0         [label="inner_0\ntime: 7.91e-05\ncuda: 160.23 Mb\n"];
+    inner_1         [label="inner_1\ntime: 7.72e-05\ncuda: 39.13 Mb\n"];
+    inner_2         [label="inner_2\ntime: 7.91e-05\ncuda: 9.77 Mb\n"];
+    inner_3         [label="inner_3\ntime: 8.91e-05\ncuda: 2.50 Mb\n"];
+    interpolate_0   [label="interpolate\ntime: 2.33e-05\ncuda: 40.0 Mb\n"];
+    interpolate_1   [label="interpolate\ntime: 2.24e-05\ncuda: 9.77 Mb\n"];
+    interpolate_2   [label="interpolate\ntime: 2.31e-05\ncuda: 2.91 Mb\n"];
     sum_0           [label="+"];
     sum_1           [label="+"];
     sum_2           [label="+"];
-    layer_0         [label="layer_0"];
-    layer_1         [label="layer_1"];
-    layer_2         [label="layer_2"];
-    conv            [label="conv"];
-    cls_logits      [label="cls_logits"];
-    bbox_pred       [label="bbox_pred"];
-    anchor_generator[label="anchor_generator"];
-    box_roi_pool    [label="box_roi_pool"];
-    fc6             [label="fc6"];
-    fc7             [label="fc7"];
-    cls_score       [label="cls_score"];
-    bbox_pred1      [label="bbox_pred"];
-    postprocess_detection [label="postprocess_detection"];
+    layer_0         [label="layer_0\ntime: 8.51e-05\ncuda: 166.25\n"];
+    layer_1         [label="layer_1\ntime: 8.65e-05\ncuda: 45.33 Mb\n"];
+    layer_2         [label="layer_2\ntime: 8.63e-05\ncuda: 16.00 Mb\n"];
+    layer_3         [label="layer_3\ntime: 9.82e-05\ncuda: 8.96 Mb\n"];
+    conv            [label="conv\ntime: 8.45e-05\ncuda: 35.68 Mb\n"];
+    cls_logits      [label="cls_logits\ntime: 7.12e-05\ncuda: 0.39 Mb\n"];
+    bbox_pred       [label="bbox_pred\ntime: 7.12e-05\ncuda: 1.41 Mb\n"];
+    anchor_generator[label="anchor_generator\ntime: 0.079390\n|CPU|: 7.35 Mb\ncuda: 84.90 Mb\n"];
+    box_roi_pool    [label="box_roi_pool\ntime: 0.003916\ncuda: 244.01 Mb\n"];
+    fc6             [label="fc6\ntime: 9.03e-05\ncuda: 23.45 Mb\n"];
+    fc7             [label="fc7\ntime: 8.55e-05\ncuda: 23.45 Mb\n"];
+    cls_score       [label="cls_score\ntime: 5.01e-05\ncuda: 0.711 Mb\n"];
+    bbox_pred1      [label="bbox_pred\ntime: 5.79e-05\ncuda: 2.78 Mb\n"];
+    postprocess_detection [label="postprocess_detection\ntime: 0.001337\ncuda: 30.54 Mb\n"];
 
     images          [label="[images]\npayload: 0.602112 Mb"];
     x               [label="[x]\npayload: 76.8 Mb"];
@@ -66,7 +67,7 @@ digraph {
             backbonefpn_body -> x [label="76.8 Mb"];
 
             subgraph cluster_0_1 {
-                label="fpn";
+                label="fpn\ntime: 0.000833\ncuda: 554.42 Mb";
 
                 subgraph cluster_0_1_0 {
                     label="inner";
@@ -119,7 +120,7 @@ digraph {
             label="rpn"
 
             subgraph cluster_1_0 {
-                label="head"
+                label="head\ntime: 0.001034\ncuda: 256.0 Mb"
 
                 
                 conv -> cls_logits [label="40.96 Mb\n10.24 Mb\n2.56 Mb\n0.64 Mb\n0.17 Mb"];
@@ -142,7 +143,7 @@ digraph {
         anchor_generator -> proposals [label="0.016 Mb"];
 
         subgraph cluster_2 {
-            label="roi_heads"
+            label="roi_heads\ntime: 0.009293\ncuda: 318.58 Mb"
 
             subgraph cluster_2_0 {
                 label="box_roi_pool";
@@ -150,13 +151,13 @@ digraph {
             }
 
             subgraph cluster_2_1 {
-                label="box_head";
+                label="box_head\ntime: 0.000179\ncuda: 46.86 Mb";
                 fc6 -> fc7 [label="4.096 Mb"];
             }
             box_roi_pool -> fc6 [label="(flatten)\n50.176 Mb"]; 
 
             subgraph cluster_2_2 {
-                label="box_predictor"
+                label="box_predictor\ntime: 0.000109\ncuda: 3.88 Mb"
                 cls_score;
                 fc7 -> cls_score [label="4.096 Mb"];
                 fc7 -> bbox_pred1 [label="4.096 Mb"];
