@@ -1,3 +1,7 @@
+---------------------------------------------------------------
+-------------------------- payload ----------------------------
+---------------------------------------------------------------
+
 transform_in([input]) :: torch.Size([1, 3, 224, 224]) 0.602112 Mb
 transform_out([images]) :: torch.Size([1, 3, 800, 800]) 7.68 Mb
 backbonefpn_body_out([x])[0] :: torch.Size([1, 256, 200, 200]) 40.96 Mb
@@ -88,7 +92,12 @@ roi_heads_box_head_fc6_in :: torch.Size([1000, 12544]) 50.176 Mb
 roi_heads_box_head_fc6_out :: torch.Size([1000, 1024]) 4.096 Mb
 roi_heads_box_head_fc7_in :: torch.Size([1000, 1024]) 4.096 Mb
 roi_heads_box_head_fc7_out :: torch.Size([1000, 1024]) 4.096 Mb
-------------------------------------------------
+
+
+---------------------------------------------------------------
+---------------------------- cpu ------------------------------
+---------------------------------------------------------------
+
 Average Time of Each Layer
 get_original_images_sizes :: 5.698204040527344e-05
 transform :: 0.007752180099487305
@@ -120,7 +129,7 @@ roi_heads_box_head_fc6 :: 0.22130107879638672
 roi_heads_box_head_fc7 :: 0.018857955932617188
 roi_heads_box_predictor_cls_score(linear) :: 0.004110813140869141
 roi_heads_box_predictor_bbox_pred(linear) :: 0.007276058197021484
-------------------------------------------------
+
 mem_cpu | Average Mem Consumption of Each Layer
 get_original_images_sizes :: 0.00041999999999999996
 transform :: 30.496091999999997
@@ -152,3 +161,9 @@ roi_heads_box_head_fc6 :: 11.73042
 roi_heads_box_head_fc7 :: 11.730004000000001
 roi_heads_box_predictor_cls_score(linear) :: 0.71136
 roi_heads_box_predictor_bbox_pred(linear) :: 2.78042
+
+
+----------------------------------------------------------------
+------------------------ clarity32 cuda ------------------------
+----------------------------------------------------------------
+

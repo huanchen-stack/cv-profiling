@@ -32,6 +32,7 @@ def _default_anchorgen():
     return AnchorGenerator(anchor_sizes, aspect_ratios)
 
 def _tensor_size(tensor):
+    tensor.to(device)
     return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
 
 class Profiler():
@@ -468,9 +469,7 @@ def faster_rcnn_simulation(model, images, targets=None):
     tt.tic("postprocess")
     detections = model.transform.postprocess(detections, images.image_sizes, original_image_sizes)
     tt.toc("postprocess")
-    
-    
-    pass
+
 
 if  __name__ == '__main__':
 

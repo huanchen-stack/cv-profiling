@@ -23,7 +23,7 @@ class ProfResnet(object):
     
     def itrResLayer(self, model, parentLayer, input, recursive=False):
         # make sure inner layers wont mess up residual steps
-        x = input.clone()
+        x = input.clone().to(device)
 
         for name, layer in model.named_children():
 
@@ -71,9 +71,11 @@ class ProfResnet(object):
             print(name, "_in ",  x.shape, ' ', _tensor_size(x), sep='')
 
             # find runtime
+            layer(x)
             tt.tic(name)
             x = layer(x)
             tt.toc(name)
+            # x = tmp
 
             print(name, "_out ", x.shape, ' ', _tensor_size(x), sep='')
 
