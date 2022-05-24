@@ -501,7 +501,7 @@ if  __name__ == '__main__':
 
     for i in range(2):
         prof = Profiler()
-        # prof.mem = True  # uncomment to profile memory consumption
+        prof.mem = True  # uncomment to profile memory consumption
         prof.faster_rcnn_simulation()
 
     if not prof.mem:
