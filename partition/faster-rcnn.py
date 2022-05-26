@@ -79,7 +79,7 @@ transform = transforms.Compose([
                                 transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
                                 ])
 images = transform(images)
-images = torch.unsqueeze(images, dim=0)
+images = torch.unsqueeze(images, dim=0).to(device)
 
 # csv file for layer_vertices
 layer_vertices = open("layer_vertices.csv", "w")

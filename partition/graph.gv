@@ -1,122 +1,49 @@
 digraph G {
 
-	subgraph cluster0 {
-		label="transform";
-		transform;
-	}
-	subgraph cluster1 {
-		label="backbonefpn_body";
-		conv1; bn1; relu; maxpool; layer1; layer2; layer3; layer4;
-	}
-	subgraph cluster2 {
-		label="backbonefpn_fpn";
-		subgraph cluster3 {
-			label="inner";
-			inner_3; inner_2; inner_1; inner_0;
-		}
-		subgraph cluster4 {
-			label="layer"
-			layer_3; layer_2; layer_1; layer_0;
-		}
-		interpolate__0; interpolate__1; interpolate__2;
-		add__0; add__1; add__2;
-		extra;
-	}
-	subgraph cluster5 {
-		label="rpn"
-		subgraph cluster6 {
-			label="fpn_heads"
-			subgraph cluster7 {
-				label="feature_0"
-				conv_f0; cls_logits_f0; bbox_pred_f0;
-			}
-			subgraph cluster8 {
-				label="feature_1"
-				conv_f1; cls_logits_f1; bbox_pred_f1;
-			}
-			subgraph cluster9 {
-				label="feature_2"
-				conv_f2; cls_logits_f2; bbox_pred_f2;
-			}
-			subgraph cluster10 {
-				label="feature_3"
-				conv_f3; cls_logits_f3; bbox_pred_f3;
-			}
-			subgraph cluster11 {
-				label="feature_4"
-				conv_f4; cls_logits_f4; bbox_pred_f4;
-			}
-		}
-		subgraph cluster12 {
-			label="anchor_generator"
-			anchor_generator;
-			anchor_postprocessing;
-		}
-	}
-	subgraph cluster13 {
-		label="roi"
-		subgraph cluster14{
-			label="box_roi_pool"
-			box_roi_pool;
-		}
-		subgraph cluster15{
-			label="box_roi_head"
-			fc6; fc7;
-		}
-		subgraph cluster16{
-			label="box_predictor"
-			cls_score; bbox_pred_roi_;
-		}
-		subgraph cluster17{
-			label="postprocess\ndetections"
-			postprocess_detections;
-		}
-	}
-
-	transform [label="transform\ntime: 0.005322933197021484\ncpu: 23.176084000000003 Mb"]
-	conv1 [label="conv1\ntime: 0.037808895111083984\ncpu: 195.3 Mb"]
-	bn1 [label="bn1\ntime: 0.015950679779052734\ncpu: 78.120688 Mb"]
-	relu [label="relu\ntime: 0.002409219741821289\ncpu: 0.00041999999999999996 Mb"]
-	maxpool [label="maxpool\ntime: 0.023080825805664062\ncpu: 9.77042 Mb"]
-	layer1 [label="layer1\ntime: 0.4109477996826172\ncpu: 1503.9111199999995 Mb"]
-	layer2 [label="layer2\ntime: 0.4614129066467285\ncpu: 1059.648156 Mb"]
-	layer3 [label="layer3\ntime: 0.4818248748779297\ncpu: 735.0592280000001 Mb"]
-	layer4 [label="layer4\ntime: 0.24142122268676758\ncpu: 213.84812000000005 Mb"]
-	inner_3 [label="inner_3\ntime: 0.009840011596679688\ncpu: 3.12541 Mb"]
-	layer_3 [label="layer_3\ntime: 0.008323192596435547\ncpu: 3.125 Mb"]
-	inner_2 [label="inner_2\ntime: 0.01792311668395996\ncpu: 12.2 Mb"]
-	interpolate__2 [label="interpolate__2\ntime: 0.0002589225769042969\ncpu: 2.44198 Mb"]
-	layer_2 [label="layer_2\ntime: 0.028141260147094727\ncpu: 12.2 Mb"]
-	inner_1 [label="inner_1\ntime: 0.03314685821533203\ncpu: 48.849999999999994 Mb"]
-	interpolate__1 [label="interpolate__1\ntime: 0.0015287399291992188\ncpu: 9.77315 Mb"]
-	layer_1 [label="layer_1\ntime: 0.09822297096252441\ncpu: 48.849999999999994 Mb"]
-	inner_0 [label="inner_0\ntime: 0.07177186012268066\ncpu: 195.3 Mb"]
-	interpolate__0 [label="interpolate__0\ntime: 0.005139827728271484\ncpu: 39.06666 Mb"]
-	layer_0 [label="layer_0\ntime: 0.454693078994751\ncpu: 195.3 Mb"]
-	extra [label="extra\ntime: 0.00016689300537109375\ncpu: 0.50742 Mb"]
-	conv_f0 [label="conv_f0\ntime: 0.443666934967041\ncpu: 195.3 Mb"]
-	cls_logits_f0 [label="cls_logits_f0\ntime: 0.012918949127197266\ncpu: 2.34416 Mb"]
-	bbox_pred_f0 [label="bbox_pred_f0\ntime: 0.014535903930664062\ncpu: 9.15 Mb"]
-	conv_f1 [label="conv_f1\ntime: 0.0993189811706543\ncpu: 48.849999999999994 Mb"]
-	cls_logits_f1 [label="cls_logits_f1\ntime: 0.0028340816497802734\ncpu: 0.58636 Mb"]
-	bbox_pred_f1 [label="bbox_pred_f1\ntime: 0.003092050552368164\ncpu: 2.34375 Mb"]
-	conv_f2 [label="conv_f2\ntime: 0.02830219268798828\ncpu: 12.2 Mb"]
-	cls_logits_f2 [label="cls_logits_f2\ntime: 0.0007739067077636719\ncpu: 0.14690999999999999 Mb"]
-	bbox_pred_f2 [label="bbox_pred_f2\ntime: 0.0006191730499267578\ncpu: 0.58595 Mb"]
-	conv_f3 [label="conv_f3\ntime: 0.007441282272338867\ncpu: 3.12541 Mb"]
-	cls_logits_f3 [label="cls_logits_f3\ntime: 0.00023293495178222656\ncpu: 0.036610000000000004 Mb"]
-	bbox_pred_f3 [label="bbox_pred_f3\ntime: 0.000209808349609375\ncpu: 0.14690999999999999 Mb"]
-	conv_f4 [label="conv_f4\ntime: 0.0024046897888183594\ncpu: 0.8454100000000001 Mb"]
-	cls_logits_f4 [label="cls_logits_f4\ntime: 0.00011324882507324219\ncpu: 0.01031 Mb"]
-	bbox_pred_f4 [label="bbox_pred_f4\ntime: 0.00011897087097167969\ncpu: 0.040010000000000004 Mb"]
-	anchor_generator [label="anchor_generator\ntime: 0.0018551349639892578\ncpu: 17.20561 Mb"]
-	anchor_postprocessing [label="anchor_postprocessing\ntime: 0.010223865509033203\ncpu: 63.096407999999975 Mb"]
-	box_roi_pool [label="box_roi_pool\ntime: 0.19593214988708496\ncpu: 239.52785599999999 Mb"]
-	fc6 [label="fc6\ntime: 0.22368478775024414\ncpu: 11.73042 Mb"]
-	fc7 [label="fc7\ntime: 0.02012491226196289\ncpu: 11.730004000000001 Mb"]
-	cls_score [label="cls_score\ntime: 0.0026769638061523438\ncpu: 0.71136 Mb"]
-	bbox_pred_roi_ [label="bbox_pred_roi_\ntime: 0.007358074188232422\ncpu: 2.78042 Mb"]
-	postprocess_detections [label="postprocess_detections\ntime: 0.0029687881469726562\ncpu: 29.94478 Mb"]
+	transform [label="transform\ntime: 0.005480289459228516\ncpu: 23.17608 Mb"]
+	conv1 [label="conv1\ntime: 0.03969001770019531\ncpu: 195.3 Mb"]
+	bn1 [label="bn1\ntime: 0.013644933700561523\ncpu: 78.120688 Mb"]
+	relu [label="relu\ntime: 0.002452850341796875\ncpu: 0.00041999999999999996 Mb"]
+	maxpool [label="maxpool\ntime: 0.022643327713012695\ncpu: 9.77042 Mb"]
+	layer1 [label="layer1\ntime: 0.4068279266357422\ncpu: 1503.9111199999995 Mb"]
+	layer2 [label="layer2\ntime: 0.4580569267272949\ncpu: 1059.647156 Mb"]
+	layer3 [label="layer3\ntime: 0.4708428382873535\ncpu: 735.0592280000001 Mb"]
+	layer4 [label="layer4\ntime: 0.25166797637939453\ncpu: 213.83812000000003 Mb"]
+	inner_3 [label="inner_3\ntime: 0.008399248123168945\ncpu: 3.12541 Mb"]
+	layer_3 [label="layer_3\ntime: 0.008741140365600586\ncpu: 3.12541 Mb"]
+	inner_2 [label="inner_2\ntime: 0.014568090438842773\ncpu: 12.2 Mb"]
+	interpolate__2 [label="interpolate__2\ntime: 0.0002281665802001953\ncpu: 2.44198 Mb"]
+	layer_2 [label="layer_2\ntime: 0.024064064025878906\ncpu: 12.2 Mb"]
+	inner_1 [label="inner_1\ntime: 0.03400397300720215\ncpu: 48.849999999999994 Mb"]
+	interpolate__1 [label="interpolate__1\ntime: 0.001322031021118164\ncpu: 9.77355 Mb"]
+	layer_1 [label="layer_1\ntime: 0.10041093826293945\ncpu: 48.849999999999994 Mb"]
+	inner_0 [label="inner_0\ntime: 0.06840705871582031\ncpu: 195.3 Mb"]
+	interpolate__0 [label="interpolate__0\ntime: 0.0054399967193603516\ncpu: 39.06666 Mb"]
+	layer_0 [label="layer_0\ntime: 0.41524291038513184\ncpu: 195.3 Mb"]
+	extra [label="extra\ntime: 0.000392913818359375\ncpu: 0.507004 Mb"]
+	conv_f0 [label="conv_f0\ntime: 0.40407609939575195\ncpu: 195.3 Mb"]
+	cls_logits_f0 [label="cls_logits_f0\ntime: 0.012454986572265625\ncpu: 2.34416 Mb"]
+	bbox_pred_f0 [label="bbox_pred_f0\ntime: 0.014098167419433594\ncpu: 9.15 Mb"]
+	conv_f1 [label="conv_f1\ntime: 0.10189604759216309\ncpu: 48.849999999999994 Mb"]
+	cls_logits_f1 [label="cls_logits_f1\ntime: 0.0030410289764404297\ncpu: 0.58636 Mb"]
+	bbox_pred_f1 [label="bbox_pred_f1\ntime: 0.003520965576171875\ncpu: 2.34416 Mb"]
+	conv_f2 [label="conv_f2\ntime: 0.030272960662841797\ncpu: 12.2 Mb"]
+	cls_logits_f2 [label="cls_logits_f2\ntime: 0.0008051395416259766\ncpu: 0.14690999999999999 Mb"]
+	bbox_pred_f2 [label="bbox_pred_f2\ntime: 0.0007312297821044922\ncpu: 0.58595 Mb"]
+	conv_f3 [label="conv_f3\ntime: 0.006932973861694336\ncpu: 3.125 Mb"]
+	cls_logits_f3 [label="cls_logits_f3\ntime: 0.00016999244689941406\ncpu: 0.03701 Mb"]
+	bbox_pred_f3 [label="bbox_pred_f3\ntime: 0.0001709461212158203\ncpu: 0.14690999999999999 Mb"]
+	conv_f4 [label="conv_f4\ntime: 0.0021982192993164062\ncpu: 0.8450000000000001 Mb"]
+	cls_logits_f4 [label="cls_logits_f4\ntime: 0.00010609626770019531\ncpu: 0.009899999999999999 Mb"]
+	bbox_pred_f4 [label="bbox_pred_f4\ntime: 0.00011301040649414062\ncpu: 0.040010000000000004 Mb"]
+	anchor_generator [label="anchor_generator\ntime: 0.0019989013671875\ncpu: 17.206120000000002 Mb"]
+	anchor_postprocessing [label="anchor_postprocessing\ntime: 0.01343393325805664\ncpu: 63.09968699999998 Mb"]
+	box_roi_pool [label="box_roi_pool\ntime: 0.205826997756958\ncpu: 239.52784599999998 Mb"]
+	fc6 [label="fc6\ntime: 0.23762202262878418\ncpu: 11.730004000000001 Mb"]
+	fc7 [label="fc7\ntime: 0.018491744995117188\ncpu: 11.73042 Mb"]
+	cls_score [label="cls_score\ntime: 0.003286600112915039\ncpu: 0.710944 Mb"]
+	bbox_pred_roi_ [label="bbox_pred_roi_\ntime: 0.006161928176879883\ncpu: 2.780004 Mb"]
+	postprocess_detections [label="postprocess_detections\ntime: 0.002874135971069336\ncpu: 29.940868 Mb"]
 
 	_images_ -> transform [label="torch.Size([1x3x224x224])\n0.602112 Mb"]
 	transform -> conv1 [label="torch.Size([1x3x800x800])\n7.68 Mb"]
