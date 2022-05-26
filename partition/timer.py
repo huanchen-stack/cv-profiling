@@ -4,6 +4,7 @@ class Clock(object):
 
     def __init__(self):
         super().__init__()
+        self.agg = 0
         self.start = None
         self.diff = None
 
@@ -12,6 +13,10 @@ class Clock(object):
     
     def toc(self):
         self.diff = time.time() - self.start
+        self.agg += self.diff
     
     def get_time(self):
         return self.diff
+
+    def get_agg(self):
+        return self.agg

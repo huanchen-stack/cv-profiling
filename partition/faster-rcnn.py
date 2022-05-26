@@ -646,6 +646,13 @@ if  __name__ == '__main__':
     print("--------------------------------------------------")
     print(result_model)
 
+    print(tt.get_agg())
+    model(images)
+    tt.tic()
+    model(images)
+    tt.toc()
+    print(tt.get_time())
+
 
 # close the csv files
 layer_vertices.close()
