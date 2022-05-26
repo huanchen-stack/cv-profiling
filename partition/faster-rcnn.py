@@ -143,6 +143,15 @@ class Profiler():
             original_image_sizes.append((val[0], val[1]))
         self.args["original_image_sizes"] = original_image_sizes
 
+
+        original_image_sizes = []
+        for img in self.images:
+            val = img.shape[-2:]
+            torch._assert(
+                len(val) == 2,
+                f"expecting the last two dimensions of the Tensor to be H and W instead got {img.shape[-2:]}",
+            )
+            original_image_sizes.append((val[0], val[1]))
         # profiling
         def _get_original_images_sizes():
             original_image_sizes = []
@@ -163,6 +172,7 @@ class Profiler():
         # warm up
         tmp_images, self.targets = self.model.transform(self.images, self.targets)
 
+        self.model.transform(self.images, self.targets)
         # profiling
         def _transform():
             self.model.transform(self.images, self.targets)
@@ -195,6 +205,7 @@ class Profiler():
             shape_, size_ = _size_helper(tmp_x)
             dependencies.write(f"{last_name}, {name}, {shape_}, {size_}\n")
             last_name = name
+            layer(tmp_x)
             # profiling
             def _layer():
                 layer(tmp_x)
@@ -217,7 +228,7 @@ class Profiler():
                 if i == idx:
                     # warm up
                     out = module(x)
-                    
+                    module(x)
                     # profiling
                     def _inner():
                         module(x)
@@ -234,7 +245,7 @@ class Profiler():
                 if i == idx:
                     # warm up
                     out = module(x)
-
+                    module(x)
                     # profiling
                     def _layer():
                         module(x)
@@ -270,6 +281,7 @@ class Profiler():
             # interpolate
             # warm up
             inner_top_down = F.interpolate(last_inner, size=feat_shape, mode="nearest")
+            F.interpolate(last_inner, size=feat_shape, mode="nearest")
             # profiling
             def _interpolate():
                 F.interpolate(last_inner, size=feat_shape, mode="nearest")
@@ -301,6 +313,7 @@ class Profiler():
             
             # warm up
             self.args["features_"].append(F.max_pool2d(self.args["features_"][-1], 1, 2, 0))
+            F.max_pool2d(self.args["features_"][-2], 1, 2, 0)
             # profiling
             def _extra():
                 F.max_pool2d(self.args["features_"][-2], 1, 2, 0)
@@ -331,6 +344,7 @@ class Profiler():
             # conv layer
             # warm up
             t = rpn_head.conv(feature)
+            rpn_head.conv(feature)
             # profiling
             def _conv():
                 rpn_head.conv(feature)
@@ -345,6 +359,7 @@ class Profiler():
             # logits
             # warm up
             logits.append(rpn_head.cls_logits(t))
+            rpn_head.cls_logits(t)
             # profiling
             def _logits():
                 rpn_head.cls_logits(t)
@@ -356,6 +371,7 @@ class Profiler():
             # bbox_pred
             # warm up 
             bbox_reg.append(rpn_head.bbox_pred(t))
+            rpn_head.bbox_pred(t)
             # profiling
             def _bbox_reg():
                 rpn_head.bbox_pred(t)
@@ -374,6 +390,7 @@ class Profiler():
         # anchor generation
         # warm up
         anchors = self.model.rpn.anchor_generator(self.images, self.args["features_"])
+        self.model.rpn.anchor_generator(self.images, self.args["features_"])
         # profiling
         def _anchor():
             self.model.rpn.anchor_generator(self.images, self.args["features_"])
@@ -399,6 +416,14 @@ class Profiler():
         boxes, scores = model.rpn.filter_proposals(proposals, self.args["objectness_"], self.images.image_sizes, num_anchors_per_level)
         self.args["proposals"], self.args["proposal_losses"] = boxes, scores
 
+        num_images = len(anchors)
+        num_anchors_per_level_shape_tensors = [o[0].shape for o in self.args["objectness"]]
+        num_anchors_per_level = [s[0] * s[1] * s[2] for s in num_anchors_per_level_shape_tensors]
+        # self.args["objectness_"], self.args["pred_bbox_deltas"] = concat_box_prediction_layers(self.args["objectness"], self.args["pred_bbox_deltas"])
+        concat_box_prediction_layers(self.args["objectness"], self.args["pred_bbox_deltas"])
+        proposals = model.rpn.box_coder.decode(self.args["pred_bbox_deltas_"].detach(), anchors)
+        proposals = proposals.view(num_images, -1, 4)
+        boxes, scores = model.rpn.filter_proposals(proposals, self.args["objectness_"], self.images.image_sizes, num_anchors_per_level)
         # profiling
         def _postprocessing():
             num_images = len(anchors)
@@ -438,6 +463,7 @@ class Profiler():
         self.args["features"] = OrderedDict([(k, v) for k, v in zip(names, self.args["features_"])])
         self.args["box_features"] = box_roi_pool(self.args["features"], self.args["proposals"], [(800, 800)])
         
+        box_roi_pool(self.args["features"], self.args["proposals"], [(800, 800)])
         # profiling
         def _box_roi_pool():
             box_roi_pool(self.args["features"], self.args["proposals"], [(800, 800)])
@@ -467,6 +493,7 @@ class Profiler():
         # fc6
         # warm up
         tmp_x = F.relu(box_head.fc6(x))
+        F.relu(box_head.fc6(x))
         # profiling
         def _fc6():
             F.relu(box_head.fc6(x))
@@ -480,6 +507,7 @@ class Profiler():
         # fc7
         # warm up
         tmp_x = F.relu(box_head.fc7(x))
+        F.relu(box_head.fc7(x))
         # profiling
         def _fc7():
             F.relu(box_head.fc7(x))
@@ -502,6 +530,7 @@ class Profiler():
         # cls_score
         # warm up
         self.args["class_logits"] = box_predictor.cls_score(x)
+        box_predictor.cls_score(x)
         # profiling
         def _cls_score():
             box_predictor.cls_score(x)
@@ -513,6 +542,7 @@ class Profiler():
         # bbox_pred_roi_
         # warm up
         self.args["box_regression"] = box_predictor.bbox_pred(x)
+        box_predictor.bbox_pred(x)
         # profiling
         def _bbox_pred():
             box_predictor.bbox_pred(x)
@@ -527,6 +557,10 @@ class Profiler():
                                     self.args["class_logits"], self.args["box_regression"], 
                                     self.args["proposals"], self.images.image_sizes
                                 )
+        self.model.roi_heads.postprocess_detections(
+                self.args["class_logits"], self.args["box_regression"], 
+                self.args["proposals"], self.images.image_sizes
+            )
         # profiling
         def _postprocess_detections():
             self.model.roi_heads.postprocess_detections(
