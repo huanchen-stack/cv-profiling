@@ -4,6 +4,11 @@ from torch import nn
 from torch.profiler import profile, record_function, ProfilerActivity
 import torchvision
 from collections import OrderedDict
+from PIL import Image
+import numpy as np
+from skimage import io, transform
+import os
+from torchvision import transforms
 
 from timer import Clock
 from memorizer import MemRec
@@ -34,15 +39,32 @@ def _default_anchorgen():
 def _tensor_size(tensor):
     return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
 
+model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
+images = torch.rand(1, 3, 224, 224).to(device)
+images = io.imread("input.jpg")
+print(images.shape)
+transform=transforms.Compose([
+                    transforms.ToPILImage(),
+                    transforms.Resize((224,224)),
+                    transforms.ToTensor(),
+                    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                    ])
+images = transform(images)
+images = torch.unsqueeze(images, dim=0)
+print(images.shape)
+result_simulation = None
+result_model = None
 
 class Profiler():
     def __init__(self):
         super().__init__()
-        self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
+        self.model = model
+        # self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
         # self.backbone = torchvision.models.resnet50(
         #     pretrained=True, progress=True, norm_layer=misc_nn_ops.FrozenBatchNorm2d
         # )  # FAKE
-        self.images = torch.rand(1, 3, 224, 224).to(device)
+        self.images = images
+        # self.images = torch.rand(1, 3, 224, 224).to(device)
         self.targets = None
         self.args = {}
         self.mem = False  # spliting up time and mem profiling to avoid doublewriting args
@@ -95,7 +117,6 @@ class Profiler():
                 print(tmp.shape, _tensor_size(tmp))
                 all += size
             print(name, '::', all)
-
 
     def get_original_images_sizes(self):
         # get original_image_sizes for postprocessing
@@ -368,6 +389,12 @@ class Profiler():
         #                             self.args["proposals"], self.images.image_sizes
         #                         )
         # in per image inferences, num_images = 0, thus takes VERY small time/mem
+        print("-------------------------------------------------------------------")
+        print(boxes, scores, labels)
+        for box in boxes:
+            print(type(box))
+            print(box.shape)
+            print(box)
         result = []
         losses = {}
         num_images = len(boxes)
@@ -380,6 +407,7 @@ class Profiler():
                 }
             )
         self.args["detections"], self.args["detector_losses"] = result, losses
+        result_simulation = self.args["detections"]
 
     def roi_heads_box_head_details(self):
         box_head = self.model.roi_heads.box_head
@@ -491,23 +519,34 @@ def faster_rcnn_simulation(model, images, targets=None):
 
 if  __name__ == '__main__':
 
-    model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
-    images = torch.rand(1, 3, 224, 224).to(device)
+    # model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
+    # images = torch.rand(1, 3, 224, 224).to(device)
 
-    for name, layer in model.named_children():
-        print(name)
-        print(layer)
-        print("------------------------------------------------")
+    result_model = model(images)
+    prof = Profiler()
+    prof.faster_rcnn_simulation()
 
-    for i in range(2):
-        prof = Profiler()
-        prof.mem = True  # uncomment to profile memory consumption
-        prof.faster_rcnn_simulation()
+    print("--------------------------------------------------")
+    print(result_model)
+    print(result_simulation)
 
-    if not prof.mem:
-        tt.report()
-    else:
-        mr.report()
+    # for name, layer in model.named_children():
+    #     print(name)
+    #     print(layer)
+    #     print("------------------------------------------------")
+
+    # for i in range(2):
+    #     prof = Profiler()
+    #     prof.mem = True  # uncomment to profile memory consumption
+    #     prof.faster_rcnn_simulation()
+
+    # if not prof.mem:
+    #     tt.report()
+    # else:
+    #     mr.report()
+
+    
+
 
 
 

@@ -3,3 +3,4 @@ torchsummary
 numpy
 matplotlib
 torchvision
+Pillow
