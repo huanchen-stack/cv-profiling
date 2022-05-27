@@ -338,16 +338,21 @@ class Profiler():
         # forward
         logits = []
         bbox_reg = []
-        
+
+        convs = []
+        convs.append(rpn_head.conv)
+        convs.append(torch.nn.ReLU().to(device))
+        conv = torch.nn.Sequential(*convs)
+
         idx = 0  # create feature index for model architecture graph
         for feature in self.args["features_"]:
             # conv layer
             # warm up
-            t = rpn_head.conv(feature)
-            rpn_head.conv(feature)
+            t = conv(feature)
+            conv(feature)
             # profiling
             def _conv():
-                rpn_head.conv(feature)
+                conv(feature)
             self._profile_helper(_conv, f"conv_f{idx}")
             # dependencies
             shape_, size_ = _size_helper(feature)
