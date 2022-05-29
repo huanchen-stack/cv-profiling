@@ -22,6 +22,7 @@ from skimage import io, transform
 import os
 from torchvision import transforms
 import csv
+from sigfig import round
 
 from timer import Clock
 from memorizer import MemRec
@@ -51,7 +52,7 @@ def _default_anchorgen():
 
 # utils
 def _tensor_size(tensor):
-    return f"{tensor.element_size() * tensor.nelement() / 1000000} Mb"
+    return f"{round(tensor.element_size() * tensor.nelement() / 1000000, sigfigs=4)} Mb"
 
 def _size_helper(obj):
     if type(obj) == torch.Tensor:
@@ -63,7 +64,7 @@ def _size_helper(obj):
             if type(tensor) != torch.Tensor:
                 assert False, f"Expected a tensor or a list of tensors as input, a list of {type(tensor)} was given."
             add += tensor.element_size() * tensor.nelement() / 1000000
-        return "List of Tensors", f"{add} Mb" 
+        return "List of Tensors", f"{round(add, sigfigs=4)} Mb" 
     else:
         assert False, f"Expected a tensor or a list of tensors as input, a {type(obj)} was given."
 

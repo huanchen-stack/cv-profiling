@@ -1,3 +1,4 @@
+from sigfig import round
 import time
 
 class Clock(object):
@@ -16,7 +17,7 @@ class Clock(object):
         self.agg += self.diff
     
     def get_time(self):
-        return self.diff
+        return round(self.diff, sigfigs=4)
 
     def get_agg(self):
-        return self.agg
+        return round(self.agg, sigfigs=4)
