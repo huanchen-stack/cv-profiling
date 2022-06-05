@@ -31,6 +31,6 @@ s = """
     |  /  \   |
     v v    v  v
   [cls] [proposals]
-""".format(1 )
+""".format('i')
 
 print(s)
