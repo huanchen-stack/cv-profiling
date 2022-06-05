@@ -1,0 +1,119 @@
+digraph G {
+
+	subgraph cluster_0 {
+		label="backbone";
+		transform; conv1; bn1; relu; maxpool;
+		layer1; layer2; layer3; layer4;
+	}
+	subgraph cluster_1 {
+		label="fpn";
+		subgraph cluster_1_0 {
+			label="inner";
+			inner_0; inner_1; inner_2; inner_3;
+		}
+		interpolate__0; interpolate__1; interpolate__2;
+		add__0; add__1; add__2;
+		subgraph cluster_1_1 {
+			label="layer";
+			layer_0; layer_1; layer_2; layer_3; extra;
+		}
+	}
+	subgraph cluster_2 {
+		label="rpn"
+		rpn_parallel_f0; rpn_parallel_f1; rpn_parallel_f2; rpn_parallel_f3; rpn_parallel_f4;
+		rpn_merger;
+	}
+	subgraph cluster_3 {
+		label="roi";
+		box_roi_pool;
+		fc6; fc7;
+		cls_score;
+		bbox_pred_roi_;
+	}
+
+	transform [label="transform\ntime: 0.007499\ncpu: 23.18 Mb"]
+	conv1 [label="conv1\ntime: 0.05396\ncpu: 195.3 Mb"]
+	bn1 [label="bn1\ntime: 0.01452\ncpu: 78.12 Mb"]
+	relu [label="relu\ntime: 0.002378\ncpu: 0.00042 Mb"]
+	maxpool [label="maxpool\ntime: 0.02216\ncpu: 9.77 Mb"]
+	layer1 [label="layer1\ntime: 0.4836\ncpu: 1504.0 Mb"]
+	layer2 [label="layer2\ntime: 0.5578\ncpu: 1060.0 Mb"]
+	layer3 [label="layer3\ntime: 0.6182\ncpu: 735.1 Mb"]
+	layer4 [label="layer4\ntime: 0.3445\ncpu: 213.8 Mb"]
+	inner_3 [label="inner_3\ntime: 0.014\ncpu: 3.125 Mb"]
+	layer_3 [label="layer_3\ntime: 0.01065\ncpu: 3.125 Mb"]
+	inner_2 [label="inner_2\ntime: 0.02095\ncpu: 12.2 Mb"]
+	interpolate__2 [label="interpolate__2\ntime: 0.0006032\ncpu: 2.442 Mb"]
+	layer_2 [label="layer_2\ntime: 0.04026\ncpu: 12.2 Mb"]
+	inner_1 [label="inner_1\ntime: 0.04375\ncpu: 48.85 Mb"]
+	interpolate__1 [label="interpolate__1\ntime: 0.001474\ncpu: 9.774 Mb"]
+	layer_1 [label="layer_1\ntime: 0.1579\ncpu: 48.85 Mb"]
+	inner_0 [label="inner_0\ntime: 0.0977\ncpu: 195.3 Mb"]
+	interpolate__0 [label="interpolate__0\ntime: 0.006171\ncpu: 39.07 Mb"]
+	layer_0 [label="layer_0\ntime: 0.6273\ncpu: 195.3 Mb"]
+	extra [label="extra\ntime: 0.0002961\ncpu: 0.5074 Mb"]
+	rpn_parallel_f0 [label="rpn_parallel_f0\ntime: 0.684\ncpu: 369.9 Mb"]
+	rpn_parallel_f1 [label="rpn_parallel_f1\ntime: 0.1774\ncpu: 92.67 Mb"]
+	rpn_parallel_f2 [label="rpn_parallel_f2\ntime: 0.04551\ncpu: 23.25 Mb"]
+	rpn_parallel_f3 [label="rpn_parallel_f3\ntime: 0.01255\ncpu: 5.985 Mb"]
+	rpn_parallel_f4 [label="rpn_parallel_f4\ntime: 0.004591\ncpu: 1.65 Mb"]
+	rpn_merger [label="rpn_merger\ntime: 0.005999\ncpu: 2.316 Mb"]
+	box_roi_pool [label="box_roi_pool\ntime: 0.2439\ncpu: 239.5 Mb"]
+	fc6 [label="fc6\ntime: 0.3306\ncpu: 11.73 Mb"]
+	fc7 [label="fc7\ntime: 0.0284\ncpu: 11.73 Mb"]
+	cls_score [label="cls_score\ntime: 0.003385\ncpu: 0.7114 Mb"]
+	bbox_pred_roi_ [label="bbox_pred_roi_\ntime: 0.01009\ncpu: 2.78 Mb"]
+	postprocess_detections [label="postprocess_detections\ntime: 0.005326\ncpu: 29.94 Mb"]
+
+	_images_ -> transform [label="torch.Size([1x3x224x224])\n0.6021 Mb"]
+	transform -> conv1 [label="torch.Size([1x3x800x800])\n7.68 Mb"]
+	conv1 -> bn1 [label="torch.Size([1x64x400x400])\n40.96 Mb"]
+	bn1 -> relu [label="torch.Size([1x64x400x400])\n40.96 Mb"]
+	relu -> maxpool [label="torch.Size([1x64x400x400])\n40.96 Mb"]
+	maxpool -> layer1 [label="torch.Size([1x64x200x200])\n10.24 Mb"]
+	layer1 -> layer2 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	layer2 -> layer3 [label="torch.Size([1x512x100x100])\n20.48 Mb"]
+	layer3 -> layer4 [label="torch.Size([1x1024x50x50])\n10.24 Mb"]
+	layer4 -> inner_3 [label="torch.Size([1x2048x25x25])\n5.12 Mb"]
+	inner_3 -> layer_3 [label="torch.Size([1x256x25x25])\n0.64 Mb"]
+	layer3 -> inner_2 [label="torch.Size([1x1024x50x50])\n10.24 Mb"]
+	inner_3 -> interpolate__2 [label="torch.Size([1x256x25x25])\n0.64 Mb"]
+	inner_2 -> add__2 [label="torch.Size([1x256x50x50])\n2.56 Mb"]
+	interpolate__2 -> add__2 [label="torch.Size([1x256x50x50])\n2.56 Mb"]
+	add__2 -> layer_2 [label="torch.Size([1x256x50x50])\n2.56 Mb"]
+	layer2 -> inner_1 [label="torch.Size([1x512x100x100])\n20.48 Mb"]
+	add__2 -> interpolate__1 [label="torch.Size([1x256x50x50])\n2.56 Mb)"]
+	inner_1 -> add__1 [label="torch.Size([1x256x100x100])\n10.24 Mb"]
+	interpolate__1 -> add__1 [label="torch.Size([1x256x100x100])\n10.24 Mb"]
+	add__1 -> layer_1 [label="torch.Size([1x256x100x100])\n10.24 Mb"]
+	layer1 -> inner_0 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	add__1 -> interpolate__0 [label="torch.Size([1x256x100x100])\n10.24 Mb)"]
+	inner_0 -> add__0 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	interpolate__0 -> add__0 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	add__0 -> layer_0 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	layer_3 -> extra [label="torch.Size([1x256x25x25])\n0.64 Mb"]
+	layer_0 -> rpn_parallel_f0 [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	rpn_parallel_f0 -> rpn_merger [label="3 Tensors\n0.028 Mb"]
+	layer_1 -> rpn_parallel_f1 [label="torch.Size([1x256x100x100])\n10.24 Mb"]
+	rpn_parallel_f1 -> rpn_merger [label="3 Tensors\n0.028 Mb"]
+	layer_2 -> rpn_parallel_f2 [label="torch.Size([1x256x50x50])\n2.56 Mb"]
+	rpn_parallel_f2 -> rpn_merger [label="3 Tensors\n0.028 Mb"]
+	layer_3 -> rpn_parallel_f3 [label="torch.Size([1x256x25x25])\n0.64 Mb"]
+	rpn_parallel_f3 -> rpn_merger [label="3 Tensors\n0.028 Mb"]
+	extra -> rpn_parallel_f4 [label="torch.Size([1x256x13x13])\n0.1731 Mb"]
+	rpn_parallel_f4 -> rpn_merger [label="3 Tensors\n0.0142 Mb"]
+	layer_0 -> box_roi_pool [label="torch.Size([1x256x200x200])\n40.96 Mb"]
+	layer_1 -> box_roi_pool [label="torch.Size([1x256x100x100])\n10.24 Mb"]
+	layer_2 -> box_roi_pool [label="torch.Size([1x256x50x50])\n2.56 Mb"]
+	layer_3 -> box_roi_pool [label="torch.Size([1x256x25x25])\n0.64 Mb"]
+	extra -> box_roi_pool [label="torch.Size([1x256x13x13])\n0.1731 Mb"]
+	rpn_merger -> box_roi_pool [label="List of Tensors\n0.016 Mb"]
+	box_roi_pool -> fc6 [label="torch.Size([1000x12544])\n50.18 Mb"]
+	fc6 -> fc7 [label="torch.Size([1000x1024])\n4.096 Mb"]
+	fc7 -> cls_score [label="torch.Size([1000x1024])\n4.096 Mb"]
+	fc7 -> bbox_pred_roi_ [label="torch.Size([1000x1024])\n4.096 Mb"]
+	cls_score -> postprocess_detections [label="torch.Size([1000x91])\n0.364 Mb"]
+	bbox_pred_roi_ -> postprocess_detections [label="torch.Size([1000x364])\n1.456 Mb"]
+	rpn_merger -> postprocess_detections [label="List of Tensors\n0.016 Mb"]
+	postprocess_detections -> postprocess_resize [label="final_output\ndepends on #boxes"]
+}

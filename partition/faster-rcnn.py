@@ -26,6 +26,7 @@ from sigfig import round
 
 from timer import Clock
 from memorizer import MemRec
+from utils import _default_anchorgen, permute_and_flatten, _tensor_size, _size_helper
 
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 usingcuda = device == "cuda:0"
@@ -36,6 +37,7 @@ mr = MemRec()
 import torch.nn.functional as F
 
 from torchvision.ops import misc as misc_nn_ops
+from torchvision.ops import boxes as box_ops
 from torchvision.ops.feature_pyramid_network import LastLevelMaxPool, FeaturePyramidNetwork
 from torchvision.ops.poolers import MultiScaleRoIAlign
 from torchvision.models._utils import IntermediateLayerGetter
@@ -44,29 +46,6 @@ from torchvision.models.detection.anchor_utils import AnchorGenerator
 from torchvision.models.detection.rpn import RPNHead, concat_box_prediction_layers
 from torchvision.models.detection.faster_rcnn import TwoMLPHead, FastRCNNPredictor
 
-# utils
-def _default_anchorgen():
-    anchor_sizes = ((32,), (64,), (128,), (256,), (512,))
-    aspect_ratios = ((0.5, 1.0, 2.0),) * len(anchor_sizes)
-    return AnchorGenerator(anchor_sizes, aspect_ratios)
-
-# utils
-def _tensor_size(tensor):
-    return f"{round(tensor.element_size() * tensor.nelement() / 1000000, sigfigs=4)} Mb"
-
-def _size_helper(obj):
-    if type(obj) == torch.Tensor:
-        return  str(obj.size()).replace(', ', 'x'), _tensor_size(obj)
-        # print(name, "::" , obj.shape, _tensor_size(obj) )  
-    elif type(obj) == type([1, 2]):
-        add = 0
-        for tensor in obj:
-            if type(tensor) != torch.Tensor:
-                assert False, f"Expected a tensor or a list of tensors as input, a list of {type(tensor)} was given."
-            add += tensor.element_size() * tensor.nelement() / 1000000
-        return "List of Tensors", f"{round(add, sigfigs=4)} Mb" 
-    else:
-        assert False, f"Expected a tensor or a list of tensors as input, a {type(obj)} was given."
 
 # load model
 model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True).eval().to(device)
@@ -392,10 +371,120 @@ class Profiler():
         self.args["objectness"] = logits
         self.args["pred_bbox_deltas"] = bbox_reg
 
+    def rpn_anchor_generator_new(self):
+        # torch.save(self.args["objectness"], "saved_objectness.pt")
+        # torch.save(self.args["pred_bbox_deltas"], "saved_pred_bbox_deltas.pt")
+        # torch.save(self.args["features_"], "saved_features.pt")
+
+        self.args["objectness"] = torch.load("saved_objectness.pt")
+        self.args["pred_bbox_deltas"] = torch.load("saved_pred_bbox_deltas.pt")
+        self.args["features_"] = torch.load("saved_features.pt")
+
+        # load variables
+
+        # get num_anchors_per_level
+        num_anchors_per_level_shape_tensors = [o[0].shape for o in self.args["objectness"]]
+        num_anchors_per_level = [s[0] * s[1] * s[2] for s in num_anchors_per_level_shape_tensors]
+
+        # for anchor generator
+        anchors_ = []
+
+        # get args required for selecting top 1000 for dall 5 feeatures
+        objectness_prob = []
+        proposals = []
+        levels = []
+
+        # getting batch (unnecessary)
+        image_range = torch.arange(1, device="cuda:0" if torch.cuda.is_available() else "cpu")
+        batch_idx = image_range[:, None]
+
+        # ALL 5 FEATURES
+        for i in range(5):
+
+            # anchor generate
+            feature_map = self.args["features_"][i]
+            grid_size = feature_map.shape[-2:]
+            image_size = self.images.tensors.shape[-2:]
+            dtype, device = feature_map.dtype, feature_map.device
+            stride = [
+                torch.empty((), dtype=torch.int64, device=device).fill_(image_size[0] // grid_size[0]),
+                torch.empty((), dtype=torch.int64, device=device).fill_(image_size[1] // grid_size[1]),
+            ]
+            anchor_generator = _default_anchorgen(i)
+            anchor_generator.set_cell_anchors(dtype, device)
+            anchors_ = anchor_generator.grid_anchors([grid_size], [stride])[0]
+            # end of anchor generate
+
+
+            # obj and pred bbox processing
+            box_cls_per_level = self.args["objectness"][i]
+            box_regression_per_level = self.args["pred_bbox_deltas"][i]
+            N, AxC, H, W = box_cls_per_level.shape
+            Ax4 = box_regression_per_level.shape[1]
+            A = Ax4 // 4
+            C = AxC // A
+            box_cls_per_level = permute_and_flatten(box_cls_per_level, N, A, C, H, W)
+            box_regression_per_level = permute_and_flatten(box_regression_per_level, N, A, 4, H, W)
+
+            box_cls_ = box_cls_per_level.flatten(0, -2)
+            box_regression_ = box_regression_per_level.reshape(-1, 4)
+            # end of obj and pred bbox processing
+
+
+            # get proposals
+            proposal_ = model.rpn.box_coder.decode(box_regression_.detach(), [anchors_])
+            proposal_ = proposal_.view(1, -1, 4)
+            proposals.append(proposal_)
+            # end of getting proposals
+
+
+            # get top n idx for each level
+            num_images = 1
+            device = proposals[i].device
+            box_cls_ = box_cls_.detach()
+            box_cls_ = box_cls_.reshape(1, -1)
+            level_ = [torch.full((num_anchors_per_level[i], ), i, dtype=torch.int64, device=device)]
+            level_ = torch.cat(level_, 0)
+            level_ = level_.reshape(1, -1).expand_as(box_cls_)
+            levels.append(level_)
+
+            top_n_idx_ = model.rpn._get_top_n_idx(box_cls_, [num_anchors_per_level[i]])
+            # end of getting top n idx for each level
+
+
+            # batching and getting objectness_prob
+            box_cls_ = box_cls_[batch_idx, top_n_idx_]
+            levels[i] = levels[i][batch_idx, top_n_idx_]
+            proposals[i] = proposals[i][batch_idx, top_n_idx_]
+            objectness_prob.append(box_cls_)
+            # end of batching and getting objectness_prob
+    
+        proposals = torch.cat(proposals, dim=1)
+        objectness_prob = torch.cat(objectness_prob, dim=1)
+        levels = torch.cat(levels, dim=1)
+
+        final_boxes = []
+        final_scores = []
+        for boxes, scores, lvl, img_shape in zip(proposals, objectness_prob, levels, [(800, 800)]):  # run only once since batch=1
+            boxes = box_ops.clip_boxes_to_image(boxes, img_shape)
+            keep = box_ops.remove_small_boxes(boxes, model.rpn.min_size)
+            boxes, scores, lvl = boxes[keep], scores[keep], lvl[keep]
+            keep = torch.where(scores >= model.rpn.score_thresh)[0]
+            boxes, scores, lvl = boxes[keep], scores[keep], lvl[keep]
+            keep = box_ops.batched_nms(boxes, scores, lvl, model.rpn.nms_thresh)
+            keep = keep[: model.rpn.post_nms_top_n()]
+            boxes, scores = boxes[keep], scores[keep]
+
+            final_boxes.append(boxes)
+            final_scores.append(scores)
+
+        self.args["proposals"], self.args["proposal_losses"] = final_boxes, final_scores
+
     def rpn_anchor_generator(self):
         # anchor generation
         # warm up
         anchors = self.model.rpn.anchor_generator(self.images, self.args["features_"])
+                
         self.model.rpn.anchor_generator(self.images, self.args["features_"])
         # profiling
         def _anchor():
@@ -626,13 +715,18 @@ class Profiler():
         print(result)
 
     def faster_rcnn_simulation(self):
+
         # self.get_original_images_sizes()
+
         self.transform()
-        self.backbonefpn_body()
-        self.backbonefpn_fpn()
+        # self.backbonefpn_body()
+        # self.backbonefpn_fpn()
+
         # self.update_features()
-        self.rpn_head()
-        self.rpn_anchor_generator()
+
+        # self.rpn_head()
+        self.rpn_anchor_generator_new()
+        # self.rpn_anchor_generator()
         self.roi_box_roi_pool()
         self.roi_box_head()
         self.roi_box_predictor()

@@ -8,3 +8,29 @@ if __name__ == "__main__":
     tmp = torch.rand(1, 3, 224, 224)
     f.write(str(tmp.shape))
 f.close()
+
+
+
+
+s = """
+      layer_{}
+        |    \\
+        v     v
+      conv  anchor
+     /    \     \\
+    v      v    |
+   cls     bbox |
+    |       |   |
+    v       v   |
+   flat    flat |
+    |   \    |  /
+    v    |   v v
+ top_idx | decode
+    |   \/    |
+    |   /\    |
+    |  /  \   |
+    v v    v  v
+  [cls] [proposals]
+""".format(1 )
+
+print(s)
