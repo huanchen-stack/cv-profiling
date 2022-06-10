@@ -1,5 +1,36 @@
 digraph G {
 
+	subgraph cluster_0 {
+		label="backbone";
+		transform; conv1; bn1; relu; maxpool;
+		layer1; layer2; layer3; layer4;
+	}
+	subgraph cluster_1 {
+		label="fpn";
+		subgraph cluster_1_0 {
+			label="inner";
+			inner_0; inner_1; inner_2; inner_3;
+		}
+		interpolate__0; interpolate__1; interpolate__2;
+		add__0; add__1; add__2;
+		subgraph cluster_1_1 {
+			label="layer";
+			layer_0; layer_1; layer_2; layer_3; extra;
+		}
+	}
+	subgraph cluster_2 {
+		label="rpn"
+		rpn_parallel_f0; rpn_parallel_f1; rpn_parallel_f2; rpn_parallel_f3; rpn_parallel_f4;
+		rpn_merger;
+	}
+	subgraph cluster_3 {
+		label="roi";
+		box_roi_pool;
+		fc6; fc7;
+		cls_score;
+		bbox_pred_roi_;
+	}
+
 	transform [label="transform\ntime: 0.0003419\ncpu: 0.000516 Mb\ncuda: 30.46 Mb"]
 	conv1 [label="conv1\ntime: 0.0001016\ncpu: 0.000372 Mb\ncuda: 160.9 Mb"]
 	bn1 [label="bn1\ntime: 0.0001836\ncpu: 0.000372 Mb\ncuda: 80.0 Mb"]
